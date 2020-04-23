@@ -5,7 +5,7 @@ from django.db import models
 
 class Ticket(models.Model):
     # buyer = models.ForeignKey('', on_delete=models.CASCADE)
-    # boardingTrain = models.ForeignKey('', on_delete=models.CASCADE)
+    # boardingTrain = models.ForeignKey('', on_delete=models.CASCADE)clea
     transactionInformation = models.TextField()
     transactionStatus = models.BooleanField()
     buyDate = models.DateField()
