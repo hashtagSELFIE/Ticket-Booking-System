@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Ticket Booking System</title>
+  <link rel="shortcut icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
+  <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css'%}">
+  <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap-select.min.css'%}">
+  <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css'%}">
+  
+  {# Addition css #}
+  {% block style %}
+  {% endblock style %}
+</head>
+<body>
+  {# Modal #}
+  {% if show_modal %}
+  <div id="modal-block" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="modelLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        {% block modal-block %}
+        {% endblock modal-block %}
+      </div>
+    </div>
+  </div>
+  <script>
+  window.onload = () => {
+    $('#modal-block').modal();
+  }
+  </script>
+  {% endif %}
+
+  {# Navbar #}
+  {% if show_navbar %}
+  <nav class="navbar navbar-expand-lg navbar-light border-bottom">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="d-none d-lg-flex w-100 justify-content-center align-items-center">
+      <div class="navbar-brand border-right pr-4 h-50">
+        <div class="my-auto">
+          <h4 class="d-inline-block my-auto">Online Eastern Railway Ticket Booking System </h4>
+        </div>
+      </div>
+      <div class="text-right w-100">
+        <div class="row align-content-right">
+          <div class="col" style="font-weight: 500;">
+            <a class="nav-link d-inline-block">English</a>
+            <a class="nav-link d-inline-block" href={% url 'login'%}>Login</a>
+          </div>
+        </div>
+        <div class="row align-content-right">
+          <div class="col text-uppercase">
+            <a class="nav-link d-inline-block">BOOK A TICKET</a>
+            <a class="nav-link d-inline-block">TRANSACTION STATUS</a>
+            <a class="nav-link d-inline-block">TRAIN SCHEDULE</a>
+            <a class="nav-link d-inline-block">VIEW BOOKING TICKET</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="collapse navbar-collapse ml-auto" id="navbar">
+      <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+        <div class="d-none d-block d-lg-none d-xl-none">
+          <div class="text-uppercase">
+            <a class="nav-link">BOOK A TICKET</a>
+            <a class="nav-link">TRANSACTION STATUS</a>
+            <a class="nav-link">TRAIN SCHEDULE</a>
+            <a class="nav-link">VIEW BOOKING TICKET</a>
+          </div>
+          <hr class="w-75">
+          <div class="d-flex">
+            <a class="nav-link" href={% url 'login'%}>Login</a>
+            <a class="nav-link ml-auto">English</a>
+          </div>
+        </div>
+      
+        {% comment %}
+        {% if request.user.is_authenticated %}
+          <a class="nav-link " href="{% url 'index' %}">Dashboard</a>
+          <a class="nav-link" href="{% url 'register' %}">Registation</a>
+          {% if request.user|has_group:"" %}
+          {% if perms.topup.add_topuplog %}
+            <a class="nav-link" href="{% url 'topup' %}">Topup</a>
+          {% endif %}
+          <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+        {% else %}
+          <a class="nav-link" href="{% url 'login' %}">Login</a>
+        {% endif %}
+        {% endcomment %}
+      </ul>
+    </div>
+  </nav>
+  {% endif %}
+  
+  {# Content #}
+  <div id="content" class="container appear-fade-start my-4">
+    {% block content %}
+    {% endblock content %}
+  </div>
+
+  <script src="{% static 'js/jquery.min.js' %}"></script>
+  <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'js/bootstrap.min.js' %}"></script>
+  <script src="{% static 'js/bootstrap-select.js' %}"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+  {# Addition script #}
+  {% block script %}
+  {% endblock script %}
+</body>
+</html>

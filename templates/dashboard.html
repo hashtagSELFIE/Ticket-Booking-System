@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<section>
+  <div class="row justify-content-center align-items-center">
+    <div class="col-12 col-lg-5">
+      <h6>From</h6>
+      <div class="form-group ml-0">
+        <input type="text" class="form-control d-inline-block" style="width: 42.5%" name="" id="" placeholder="">
+        <span>To</span>
+        <input type="text" class="form-control d-inline-block" style="width: 42.5%" name="" id="" placeholder="">
+      </div>
+    </div>
+    <div class="col-12 col-lg-5 my-3 my-lg-0">
+      <h6>Select</h6>
+      <span style="font-weight: 500">Traveling Date</span>
+    </div>
+    <div class="col-12 col-lg-2">
+      <button type="button" class="btn btn-outline-dark">Search for schedule</button>
+    </div>
+  </div>
+</section>
+<section class="my-5">
+  <div class="d-flex flex-wrap justify-content-between" style="font-weight: 200">
+    <a class="btn btn-dashboard-link border shadow p-3 ">
+      <img src="{% static 'image/validating-ticket.png' %}" class="mx-auto img-fluid" alt="Book a ticket">
+      <p class="my-auto">BOOK A TICKET</p>
+    </a>
+    <a class="btn btn-dashboard-link border shadow p-3">
+      <img src="{% static 'image/train.png' %}" class="mx-auto img-fluid" alt="Train schedule">
+      <p class="my-auto">TRAIN SCHEDULE</p>
+    </a>
+    <a class="btn btn-dashboard-link border shadow p-3">
+      <img src="{% static 'image/transaction.png' %}" class="mx-auto img-fluid" alt="Transaction status">
+      <p class="my-auto">TRANSACTION STATUS</p>
+    </a>
+    <a class="btn btn-dashboard-link border shadow p-3">
+      <img src="{% static 'image/bill.png' %}" class="mx-auto img-fluid" alt="View booking ticket">
+      <p class="my-auto">VIEW BOOKING TICKET</p>
+    </a>
+  </div>
+</section>
+<section class="my-5">
+  <h3>Announcement</h3>
+  <table class="table mt-3">
+    <thead>
+      <tr>
+        <th scope="col">Announcement</th>
+        <th scope="col">Status</th>
+        <th scope="col">Viewer</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">1</th>
+        <td>Mark</td>
+        <td>Otto</td>
+      </tr>
+      <tr>
+        <th scope="row">2</th>
+        <td>Jacob</td>
+        <td>Thornton</td>
+      </tr>
+      <tr>
+        <th scope="row">3</th>
+        <td>Larry</td>
+        <td>the Bird</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+{% endblock content %}
+
+{% block style %}
+<style>
+  .btn.btn-dashboard-link {
+    position: relative;
+    width: 20%;
+    min-width: 150px;
+    transition: 0.5s all ease-in-out;
+  }
+</style>
+{% endblock style %}
