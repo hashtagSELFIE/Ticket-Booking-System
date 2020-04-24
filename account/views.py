@@ -6,7 +6,7 @@ from django.views import View
 # Create your views here.
 class AuthentificationView(View):
     def get(self, request):
-        return render(request, 'base.html', context={})
+        return render(request, 'account/login.html', context={})
 
     def post(self, request):
         return HttpResponse('test login')

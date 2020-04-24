@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<section class="d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+  <div class="border rounded shadow mx-auto w-100 p-5" style="max-width: 380px">
+    <div id="menu" class="row mb-3">
+      <div class="col border-bottom">
+        <div class="w-75 py-3 mx-auto text-center">
+          <span>Login</span>
+        </div>
+      </div>
+      <div class="col border-bottom">
+        <div class="w-75 py-3 mx-auto text-center">
+          <span class="active">Sign up</span>
+        </div>
+      </div>
+    </div>
+    <form action="#" method="POST">
+      <div class="form-group">
+        <input type="text" class="form-control" name="" id="" placeholder="Username">
+      </div>
+      <div class="form-group">
+        <input type="password" class="form-control" name="" id="" placeholder="Password">
+      </div>
+
+      <div class="text-center">
+        <button type="submit" class="btn btn-outline-dark px-5">Login</button>
+        <div class="mt-1 py-1">
+          <span class="border-bottom" style="font-size: 0.675rem">FORGET YOUR PASSWORD?</span>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>
+{% endblock content %}
+
+{% block style %}
+<style>
+  #menu .items {
+    border: 1px solid #000;
+  }
+  
+  #menu span {
+    cursor: pointer;
+  }
+
+  #menu span.active {
+    color: green;
+  }
+</style>
+{% endblock style %}
