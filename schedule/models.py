@@ -6,6 +6,7 @@ from django.db import models
 
 class Station(models.Model):
     station_name = models.TextField()
+    english_station_name = models.TextField(null=True)
 
 
 class Train(models.Model):
@@ -24,9 +25,7 @@ class Train(models.Model):
 
 
 class Timetable(models.Model):
-    train_name = models.OneToOneField(Train, on_delete=models.CASCADE, primary_key=True)
-    train_type = models.TextField()
-    arrived_time = models.DateTimeField()
-    departed_time = models.DateTimeField()
-    from_station = models.TextField()
-    to_station = models.TextField()
+    train_name = models.OneToOneField(Train, on_delete=models.CASCADE)
+    station_id = models.OneToOneField(Station, on_delete=models.CASCADE, default=None, null=True)
+    arrived_time = models.TimeField()
+    departed_time = models.TimeField()
