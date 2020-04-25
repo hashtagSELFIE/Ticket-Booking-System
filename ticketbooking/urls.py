@@ -23,4 +23,6 @@ urlpatterns = [
     path('', announcement.views.dashboard, name="dashboard"),
     path('login', AuthentificationView.as_view(), name="login"),
     path('booking/', include('booking.urls')),
+    path('schedule/', include('schedule.urls')),
+
 ]
