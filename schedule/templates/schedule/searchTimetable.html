@@ -188,10 +188,10 @@
                 </div>
                 <div class="d-inline-block w-100 mr-auto px-2">
                   {% for tt in timetable %}
-                  {% if tr.id == tt.train_name_id and tt.arrived_time is None %}
+                  {% if tr.id == tt.train_id and tt.arrived_time is None %}
                   <div class="d-block d-sm-flex justify-content-between">
                     {% for st in station %}
-                    {% if tt.station_id_id == st.id %}
+                    {% if tt.station_id == st.id %}
                     <span class="text-bold">{{ st.english_station_name }}</span>
                     {% endif %}
                     {% endfor %}
@@ -204,10 +204,10 @@
                   {% endfor %}
                   <hr>
                   {% for tt in timetable %}
-                  {% if tr.id == tt.train_name_id and tt.departed_time is None %}
+                  {% if tr.id == tt.train_id and tt.departed_time is None %}
                   <div class="d-block d-sm-flex justify-content-between ">
                     {% for st in station %}
-                    {% if tt.station_id_id == st.id %}
+                    {% if tt.station_id == st.id %}
                     <span class="text-bold">{{ st.english_station_name }}</span>
                     {% endif %}
                     {% endfor %}
@@ -225,7 +225,7 @@
                 <div class="card card-body">
                   {% for tt in timetable %}
                   {% for st in station %}
-                  {% if tt.station_id_id == st.id and tr.id == tt.train_name_id %}
+                  {% if tt.station_id == st.id and tr.id == tt.train_id %}
                   <span class="text-body">{{ st.english_station_name }} {{ tt.arrived_time | time:'H:i'}}</span><br>
                   {% endif %}
                   {% endfor %}

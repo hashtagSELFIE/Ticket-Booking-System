@@ -25,7 +25,7 @@ class Train(models.Model):
 
 
 class Timetable(models.Model):
-    train_name = models.ForeignKey(Train, on_delete=models.CASCADE)
-    station_id = models.ForeignKey(Station, on_delete=models.CASCADE, null=True)
+    train = models.ForeignKey(Train, on_delete=models.CASCADE)
+    station = models.ForeignKey(Station, on_delete=models.CASCADE, null=True)
     arrived_time = models.TimeField(null=True)
     departed_time = models.TimeField(null=True)
