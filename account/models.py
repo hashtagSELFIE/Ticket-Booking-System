@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from schedule.models import Station
+from .utils import GenderTypes
 
 
 # Create your models here.
@@ -19,7 +20,10 @@ class Account(models.Model):
     # first_name = models.TextField()
     # last_name = models.TextField()
     # email = models.TextField()
-    gender = models.TextField(blank=True, null=True)
+    gender = models.IntegerField(
+        choices=GenderTypes.choices(),
+        default=GenderTypes.PREFER,
+    )
     birth_date = models.DateField(blank=True, null=True)
     user_type = models.TextField(
         choices=userType,
@@ -29,6 +33,9 @@ class Account(models.Model):
 
     def get_fullname(self):
         return self.user_id.first_name + self.user_id.last_name
+
+    def get_gender_label(self):
+        return GenderTypes(self.gender).name.title()
 
 
 class Announcer(models.Model):
@@ -43,7 +50,7 @@ class TicketSeller(models.Model):
 
 
 # @receiver(post_save, sender=User)
-# def create_user_profile(sender, instance, created, **kwargs):
+# def create_user_arofile(sender, instance, created, **kwargs):
 #     if created:
 #         Account.objects.create(user_id=instance)
 

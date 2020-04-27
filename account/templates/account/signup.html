@@ -3,7 +3,7 @@
 
 {% block content %}
 <section class="d-flex justify-content-center align-items-center my-5">
-  <div class="border rounded shadow mx-auto w-100 p-5" style="max-width: 380px">
+  <div class="border rounded shadow mx-auto w-100 p-5" style="max-width: 420px">
     <div id="menu" class="row mb-3">
       <div class="col border-bottom">
         <a id="login-link" class="d-block w-100 py-3 mx-auto text-center" href={% url 'login' %}>
@@ -21,36 +21,35 @@
       <form action="#" method="POST">
         {% csrf_token %}
         <div class="form-group">
-          <input type="text" class="form-control" name="" id="" placeholder="Email" required>
+          <input type="text" class="form-control" name="{{ register_form.email.name }}" id="{{ register_form.email.id_for_label }}" 
+            value="{{ register_form.email.value }}" placeholder="Email" required>
         </div>
         <div class="form-group">
-          <input type="password" class="form-control" name="" id="" placeholder="Password" required>
+          <input type="password" class="form-control" name="{{ register_form.password.name }}" id="{{ register_form.password.id_for_label }}" placeholder="Password" required>
         </div>
         <div class="form-group">
-          <input type="password" class="form-control" name="" id="" placeholder="Retype Password" required>
+          <input type="password" class="form-control" name="repassword" id="repassword-id" placeholder="Retype Password" required>
         </div>
         <div class="row">
-          <div class="col-12 col-lg-6">
+          <div class="col-12 col-md-6">
             <div class="form-group">
-              <input type="text" class="form-control" name="" id="" placeholder="First name" required>
+              <input type="text" class="form-control" name="{{ register_form.first_name.name }}" id="{{ register_form.last_name.id_for_label }}" 
+                value="{{ register_form.first_name.value }}"placeholder="First name" required>
             </div>
           </div>
-          <div class="col-12 col-lg-6">
+          <div class="col-12 col-md-6">
             <div class="form-group">
-              <input type="text" class="form-control" name="" id="" placeholder="Surname" required>
+              <input type="text" class="form-control" name="{{ register_form.last_name.name }}" id="{{ register_form.last_name.id_for_label }}" 
+                value="{{ register_form.last_name.value }}" placeholder="Surname" required>
             </div>
           </div>
-          {% if error.errorMsg %}
-          <div class="form-group">
-            <small class="form-text" style="color: red">{{ error.errorMsg }}</small>
-          </div>
-          {% endif %}
         </div>
+        {% if error.errorMsg %}
+        <div class="form-group">
+          <small class="form-text" style="color: red">{{ error.errorMsg }}</small>
+        </div>
+        {% endif %}
 
-        <hr>
-        <div class="form-template">
-          {{ register_form.as_p }}
-        </div>
         <div class="text-center">
           <button type="submit" class="btn btn-outline-dark px-5">Sign Up</button>
         </div>
