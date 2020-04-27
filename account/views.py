@@ -74,6 +74,7 @@ class SignupView(View):
                         first_name=data_form['first_name'],
                         last_name=data_form['last_name']
                     )
+                    user.groups.set(['passenger'])
                     user.save()
 
                     account = Account(user_id=user, user_type='US')
