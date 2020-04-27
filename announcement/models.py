@@ -6,6 +6,7 @@ from account.models import Announcer
 
 
 class Announcement(models.Model):
-    announcer_user = models.ForeignKey(Announcer, on_delete=models.CASCADE)
+    announcer_user = models.ForeignKey(Announcer, on_delete=models.CASCADE, null=True)
     announce_text = models.TextField()
     announce_time = models.DateTimeField()
+    view_count = models.IntegerField()
