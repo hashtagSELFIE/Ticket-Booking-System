@@ -40,6 +40,11 @@
               <input type="text" class="form-control" name="" id="" placeholder="Surname" required>
             </div>
           </div>
+          {% if error.errorMsg %}
+          <div class="form-group">
+            <small class="form-text" style="color: red">{{ error.errorMsg }}</small>
+          </div>
+          {% endif %}
         </div>
 
         <hr>

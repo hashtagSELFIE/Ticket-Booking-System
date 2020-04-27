@@ -18,9 +18,14 @@
 <body>
   {# Modal #}
   {% if show_modal %}
-  <div id="modal-block" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="modelLabel" aria-hidden="true">
+  <div id="modal-block" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modelLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
+        <div class="modal-header" style="border: none;">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
         {% block modal-block %}
         {% endblock modal-block %}
       </div>
@@ -43,7 +48,7 @@
     <div class="d-none d-lg-flex w-100 justify-content-center align-items-center">
       <div class="navbar-brand border-right pr-4 h-50">
         <div class="my-auto">
-          <h4 class="d-inline-block my-auto">Online Eastern Railway Ticket Booking System </h4>
+          <a class="d-inline-block my-auto"  href={% url 'dashboard' %} style="text-decoration: none; color: black;">Online Eastern Railway Ticket Booking System </a>
         </div>
       </div>
       <div class="text-right w-100">
@@ -57,7 +62,7 @@
           <div class="col text-uppercase">
             <a class="nav-link d-inline-block" href={% url 'searchSchedules' %}>BOOK A TICKET</a>
             <a class="nav-link d-inline-block">TRANSACTION STATUS</a>
-            <a class="nav-link d-inline-block">TRAIN SCHEDULE</a>
+            <a class="nav-link d-inline-block" href={% url 'searchTimetable' %}>TRAIN SCHEDULE</a>
             <a class="nav-link d-inline-block">VIEW BOOKING TICKET</a>
           </div>
         </div>
@@ -70,7 +75,7 @@
           <div class="text-uppercase">
             <a class="nav-link d-inline-block" href={% url 'searchSchedules' %}>BOOK A TICKET</a>
             <a class="nav-link">TRANSACTION STATUS</a>
-            <a class="nav-link">TRAIN SCHEDULE</a>
+            <a class="nav-link" href={% url 'searchTimetable' %}>TRAIN SCHEDULE</a>
             <a class="nav-link">VIEW BOOKING TICKET</a>
           </div>
           <hr class="w-75">

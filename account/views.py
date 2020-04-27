@@ -13,16 +13,24 @@ class LoginView(View):
         })
 
     def post(self, request):
+        context = {
+            'show_navbar': True
+        }
         username = request.POST.get('user')
         pwd = request.POST.get('password')
         if username and pwd:
             user = authenticate(username=username, password=pwd)
             if user:
                 return redirect('/')
-
-        return render(request, 'account/login.html', context={
-            'show_navbar': True
-        })
+            else:
+                context['error'] = {
+                    'errorMsg': "Username or password mismatch or not found!"
+                }
+        elif username or pwd:
+            context['error'] = {
+                'errorMsg': "Missing username or password"
+            }
+        return render(request, 'account/login.html', context=context)
 
 
 class SignupView(View):

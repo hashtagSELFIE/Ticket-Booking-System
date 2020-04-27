@@ -14,6 +14,14 @@ class SearchTimetable(View):
         return render(request, 'schedule/searchTimetable.html', context=context)
 
     def post(self, request):
-        context = {'show_navbar': True, 'schedule': {
-            'from': request.POST.get('from'), 'to': request.POST.get('to')}}
+
+        context = {'show_navbar': True,
+                   'train': Train.objects.all(),
+                   'timetable': Timetable.objects.all(),
+                   'station': Station.objects.all(),
+                   'schedule': {
+                        'from': request.POST.get('from'),
+                        'to': request.POST.get('to')
+                    }
+                  }
         return render(request, 'schedule/searchTimetable.html', context=context)

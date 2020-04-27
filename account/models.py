@@ -6,7 +6,6 @@ from schedule.models import Station
 
 
 # Create your models here.
-
 class Account(models.Model):
     USER = 'US'
     SELLER = 'TS'
@@ -32,24 +31,28 @@ class Account(models.Model):
         return self.user_id.first_name + self.user_id.last_name
 
 
-@receiver(post_save, sender=User)
-def create_user_arofile(sender, instance, created, **kwargs):
-    if created:
-        Account.objects.create(user_id=instance)
-
-
-@receiver(post_save, sender=User)
-def save_user_account(sender, instance, **kwargs):
-    account = Account.objects.get(user_id=instance)
-    account.save()
-
-
 class Announcer(models.Model):
     user = models.OneToOneField(
         Account, primary_key=True, on_delete=models.CASCADE)
 
 
 class TicketSeller(models.Model):
-    user = models.OneToOneField(Account, primary_key=True,
-                                on_delete=models.CASCADE)
+    user = models.OneToOneField(
+        Account, primary_key=True, on_delete=models.CASCADE)
     station = models.ForeignKey(Station, on_delete=models.CASCADE)
+
+
+# @receiver(post_save, sender=User)
+# def create_user_arofile(sender, instance, created, **kwargs):
+#     if created:
+#         Account.objects.create(user_id=instance)
+
+
+# @receiver(post_save, sender=User)
+# def save_user_account(sender, instance, **kwargs):
+#     account = Account.objects.get(user_id=instance)
+#     if account:
+#         account.save()
+#     else:
+#         account = Account.objects.create(user_id=instance)
+#         account.save()
