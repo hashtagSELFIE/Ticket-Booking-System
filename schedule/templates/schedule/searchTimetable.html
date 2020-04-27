@@ -21,13 +21,21 @@
           <div class="col-6">
             <h6>From</h6>
             <div class="form-group ml-0">
-              <input type="text" class="form-control d-inline-block" name="from" id="" placeholder="">
+              <select class="form-control" name="from">
+                {% for st in station %}
+                  <option value="{{st.id}}">{{st.english_station_name}}</option>
+                {% endfor %}
+              </select>
             </div>
           </div>
           <div class="col-6">
             <h6>To</h6>
             <div class="form-group ml-0">
-              <input type="text" class="form-control d-inline-block" name="to" id="" placeholder="">
+              <select class="form-control" name="to">
+                {% for st in station %}
+                  <option value="{{st.id}}">{{st.english_station_name}}</option>
+                {% endfor %}
+              </select>
             </div>
           </div>
           <button type="submit" class="btn btn-dark px-5 mx-auto">Search</button>
@@ -78,7 +86,7 @@
                 <input type="radio" class="d-none" name="selectedTicket" id="selectedTicket-1"
                        value="1">
                 <label for="selectedTicket-1" class="selectTicket">
-                  <img src="{% static " image/circle.png" %}" alt="Uncheck">
+                  <img src="{% static 'image/circle.png' %}" alt="Uncheck">
                 </label>
               </div>
             </div>
@@ -117,7 +125,7 @@
                 <input type="radio" class="d-none" name="selectedTicket" id="selectedTicket-2"
                        value="2">
                 <label for="selectedTicket-2" class="selectTicket">
-                  <img src="{% static " image/circle.png" %}" alt="Uncheck">
+                  <img src="{% static 'image/circle.png' %}" alt="Uncheck">
                 </label>
               </div>
             </div>
@@ -156,7 +164,7 @@
                 <input type="radio" class="d-none" name="selectedTicket" id="selectedTicket-3"
                        value="3">
                 <label for="selectedTicket-3" class="selectTicket">
-                  <img src="{% static " image/circle.png" %}" alt="Uncheck">
+                  <img src="{% static 'image/circle.png' %}" alt="Uncheck">
                 </label>
               </div>
             </div>
@@ -171,68 +179,70 @@
 
           <div id="display-schedule">
             {% for tr in train %}
-            <a class="btn" data-toggle="collapse" href="#collapseExample_{{ tr.id }}" role="button"
-               aria-expanded="false" aria-controls="collapseExample_{{ tr.id }}">
-              <div class="d-flex justify-content-center align-items-center rounded border w-100 p-3 my-3">
-                <div class="border-right text-center" style="min-width: 90px;">
-                  <figure class="w-25 mx-auto">
-                    <img src="{% static 'image/train.png' %}" class="mx-auto img-fluid"
-                         alt="Train">
-                  </figure>
-                  <h6>Train No.</h6>
-                  <h5 class="mb-0">{{ tr.train_name }}</h5>
-                </div>
-                <div class="d-none d-md-inline-block vertical-line mx-3 mx-md-4 mx-lg-5">
-                  <div class="circle d-block"></div>
-                  <div class="circle d-block"></div>
-                </div>
-                <div class="d-inline-block w-100 mr-auto px-2">
-                  {% for tt in timetable %}
-                  {% if tr.id == tt.train_id and tt.arrived_time is None %}
-                  <div class="d-block d-sm-flex justify-content-between">
-                    {% for st in station %}
-                    {% if tt.station_id == st.id %}
-                    <span class="text-bold">{{ st.english_station_name }}</span>
+            <div data-toggle="collapse" href="#collapse_{{ tr.id }}" role="button"
+               aria-expanded="false" aria-controls="collapse_{{ tr.id }}" style="cursor: pointer">
+              <div class="d-flex flex-wrap rounded border w-100 p-3 my-3">
+                <div class="d-flex w-100 justify-content-center align-items-center">
+                  <div class="border-right text-center" style="min-width: 90px;">
+                    <figure class="w-25 mx-auto">
+                      <img src="{% static 'image/train.png' %}" class="mx-auto img-fluid"
+                          alt="Train">
+                    </figure>
+                    <h6>Train No.</h6>
+                    <h5 class="mb-0">{{ tr.train_name }}</h5>
+                  </div>
+                  <div class="d-none d-md-inline-block vertical-line mx-3 mx-md-4 mx-lg-5">
+                    <div class="circle d-block"></div>
+                    <div class="circle d-block"></div>
+                  </div>
+                  <div class="d-inline-block w-100 mr-auto px-2">
+                    {% for tt in timetable %}
+                    {% if tr.id == tt.train_id and tt.arrived_time is None %}
+                    <div class="d-block d-sm-flex justify-content-between">
+                      {% for st in station %}
+                      {% if tt.station_id == st.id %}
+                      <span class="text-bold">{{ st.english_station_name }}</span>
+                      {% endif %}
+                      {% endfor %}
+                      <div class="d-inline-block ml-sm-1 ml-md-auto">
+                        <span class="mr-sm-3 mr-md-5">Dep.</span>
+                        <span class="text-bold">{{ tt.departed_time |time:'H:i' }}</span>
+                      </div>
+                    </div>
                     {% endif %}
                     {% endfor %}
-                    <div class="d-inline-block ml-sm-1 ml-md-auto">
-                      <span class="mr-sm-3 mr-md-5">Dep.</span>
-                      <span class="text-bold">{{ tt.departed_time |time:'H:i' }}</span>
+                    <hr>
+                    {% for tt in timetable %}
+                    {% if tr.id == tt.train_id and tt.departed_time is None %}
+                    <div class="d-block d-sm-flex justify-content-between ">
+                      {% for st in station %}
+                      {% if tt.station_id == st.id %}
+                      <span class="text-bold">{{ st.english_station_name }}</span>
+                      {% endif %}
+                      {% endfor %}
+                      <div class="d-inline-block ml-sm-1 ml-md-auto">
+                        <span class="mr-sm-3 mr-md-5">Arr.</span>
+                        <span class="text-bold">{{ tt.arrived_time | time:'H:i' }}</span>
+                      </div>
                     </div>
-                  </div>
-                  {% endif %}
-                  {% endfor %}
-                  <hr>
-                  {% for tt in timetable %}
-                  {% if tr.id == tt.train_id and tt.departed_time is None %}
-                  <div class="d-block d-sm-flex justify-content-between ">
-                    {% for st in station %}
-                    {% if tt.station_id == st.id %}
-                    <span class="text-bold">{{ st.english_station_name }}</span>
                     {% endif %}
                     {% endfor %}
-                    <div class="d-inline-block ml-sm-1 ml-md-auto">
-                      <span class="mr-sm-3 mr-md-5">Arr.</span>
-                      <span class="text-bold">{{ tt.arrived_time | time:'H:i' }}</span>
-                    </div>
                   </div>
-                  {% endif %}
-                  {% endfor %}
                 </div>
-              </div>
 
-              <div class="collapse" id="collapseExample_{{ tr.id }}">
-                <div class="card card-body">
-                  {% for tt in timetable %}
-                  {% for st in station %}
-                  {% if tt.station_id == st.id and tr.id == tt.train_id %}
-                  <span class="text-body">{{ st.english_station_name }} {{ tt.arrived_time | time:'H:i'}}</span><br>
-                  {% endif %}
-                  {% endfor %}
-                  {% endfor %}
+                <div class="collapse w-100 mt-3" id="collapse_{{ tr.id }}">
+                  <div class="card card-body">
+                    {% for tt in timetable %}
+                    {% for st in station %}
+                    {% if tt.station_id == st.id and tr.id == tt.train_id %}
+                    <span class="text-body">{{ st.english_station_name }} {{ tt.arrived_time | time:'H:i'}}</span><br>
+                    {% endif %}
+                    {% endfor %}
+                    {% endfor %}
+                  </div>
                 </div>
               </div>
-            </a>
+            </div>
             {% endfor %}
           </div>
         </div>
