@@ -4,13 +4,18 @@
 {% block content %}
 <div class="my-4">
   <div class="w-100 rounded border shadow p-3 p-lg-5">
-    {% comment %} <div class="progress w-50 mx-auto my-5" style="height: 3px;">
-      <div class="circle"></div>
-      <div class="circle"></div>
-      <div class="circle"></div>
-      <div class="circle"></div>
-      <div class="progress-bar" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-    </div> {% endcomment %}
+    <div id="progress-bar" class="my-5">
+      <div id="line">
+        <div class="circle active" style="left: 0%;"></div>
+        {% if schedule == null %}
+        <div class="circle" style="left: 33.33%;"></div>
+        {% else %}
+        <div class="circle active" style="left: 33.33%;"></div>
+        {% endif %}
+        <div class="circle" style="left: 66.67%;"></div>
+        <div class="circle" style="left: 98.25%;"></div>
+      </div>
+    </div>
     <div class="row">
       <div class="col">
         <h1>Search For Schedules</h1>
@@ -19,13 +24,21 @@
           <div class="col-6">
             <h6>From</h6>
             <div class="form-group ml-0">
-              <input type="text" class="form-control d-inline-block" name="from" id="" placeholder="">
+              <select class="form-control" name="from">
+                {% for st in station %}
+                  <option value="{{st.id}}">{{st.english_station_name}}</option>
+                {% endfor %}
+              </select>
             </div>
           </div>
           <div class="col-6">
             <h6>To</h6>
             <div class="form-group ml-0">
-              <input type="text" class="form-control d-inline-block" name="to" id="" placeholder="">
+              <select class="form-control" name="to">
+                {% for st in station %}
+                  <option value="{{st.id}}">{{st.english_station_name}}</option>
+                {% endfor %}
+              </select>
             </div>
           </div>
           <button type="submit" class="btn btn-dark px-5 mx-auto">Search</button>
@@ -162,6 +175,48 @@
 
 {% block style %}
 <style>
+  #progress-bar {
+    width: 100%;
+    height: 20%;
+  }
+
+  #line {
+    height: 6px;
+    width: 70%;
+    background: #707070;
+    border-radius: 5px;
+    margin: auto;
+    top: 50%;
+    transform: translateY(-50%);
+    position: relative;
+  }
+
+  #progress-bar > #line .circle {
+    width: 20px;
+    height: 20px;
+    background: white;
+    border-radius: 15px;
+    position: absolute;
+    top: -7px;
+    border: 3px solid #707070;
+  }
+
+  #progress-bar > #line .circle.active {
+    background: #707070;
+  }
+
+  #progress-bar > #line .circle:before {
+    content: '';
+    width: 10px;
+    height: 10px;
+    background: white;
+    position: absolute;
+    border-radius: 100%;
+    top: 2px;
+    left: 2px;
+    display: none;
+  }
+
   .vertical-line {
     width: 3px;
     height: 60px;
@@ -169,7 +224,7 @@
   }
 
   .vertical-line .circle {
-    position:absolute;
+    position: absolute;
     margin-top: -10px;
     margin-left: -9px;
     z-index: 1;
