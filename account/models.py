@@ -45,8 +45,11 @@ def save_user_account(sender, instance, **kwargs):
 
 
 class Announcer(models.Model):
-    user = models.OneToOneField(User, primary_key=True, on_delete=models.CASCADE)
+    user = models.OneToOneField(
+        Account, primary_key=True, on_delete=models.CASCADE)
+
 
 class TicketSeller(models.Model):
-    user = models.ForeignKey(User, primary_key=True, on_delete=models.CASCADE)
+    user = models.OneToOneField(Account, primary_key=True,
+                                on_delete=models.CASCADE)
     station = models.ForeignKey(Station, on_delete=models.CASCADE)
