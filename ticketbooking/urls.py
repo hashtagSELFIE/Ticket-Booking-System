@@ -26,5 +26,6 @@ urlpatterns = [
     path('signup', SignupView.as_view(), name="signup"),
     path('booking/', include('booking.urls')),
     path('schedule/', include('schedule.urls')),
+    path('announcement/', include('announcement.urls')),
 
 ]

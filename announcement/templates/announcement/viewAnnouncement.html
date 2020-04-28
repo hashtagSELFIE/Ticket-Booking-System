@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+  <div class="my-4">
+    <div class="w-100 rounded border shadow p-5">
+      <div class="row">
+        <a class="col">
+          <h1>Search For Schedules</h1>
+          <table class="table mt-3">
+            <thead>
+            <tr>
+              <th scope="col">No.</th>
+              <th scope="col">Announcement</th>
+              <th scope="col">Announced Date</th>
+              <th scope="col">Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for a in announcement %}
+              <p>
+                <a data-toggle="collapse" href="#collapse_{{ a.id }}" role="button" aria-expanded="false"
+                   aria-controls="collapse_{{ a.id }}">
+                  <tr>
+                    <th scope="row">{{ a.id }}</th>
+                    <td>{{ a.announce_text|truncatechars:100 }}</td>
+                    <td>{{ a.announce_time|date:'d/M/yy' }}, {{ a.announce_time|time:'H:i' }}</td>
+                    <td>
+                      <a href="{% url 'editAnnouncement' announcement_id=a.id %}">
+                        <div class="btn btn-warning">Edit</div>
+                      </a>
+                      <a href="{% url 'editAnnouncement' announcement_id=a.id %}">
+                        <div class="btn btn-danger">Delete</div>
+                      </a>
+                    </td>
+                  </tr>
+                </a>
+              </p>
+              <div class="collapse w-100 mt-3" id="collapse_{{ a.id }}">
+                {{ a.announce_text }}
+              </div>
+            {% endfor %}
+            </tbody>
+          </table>
+
+      </div>
+    </div>
+  </div>
+  </div>
+{% endblock content %}
+
+{% block style %}
+  <style>
+  </style>
+{% endblock style %}
