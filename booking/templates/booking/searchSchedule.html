@@ -36,7 +36,12 @@
               </select>
             </div>
           </div>
-          <button id="search-schedule" class="btn btn-dark px-5 mx-auto">Search</button>
+          <div class="col-12">
+            <small id="select-error" class="mb-3" style="color: red;"></small>
+          </div>
+          <div class="col-12 my-2 text-center">
+            <button id="search-schedule" class="btn btn-dark px-5 mx-auto">Search</button>
+          </div>
         </div>
 
         <form id="selected-schedule" action="{% url 'selectTransaction' %}" method="POST">
@@ -248,75 +253,79 @@ $(function () {
 
       console.log(from_id, from_name, to_id, to_name)
 
-      if (from_id && to_id && (from_id != to_id)) {
-        $(`#from-name`).text(from_name)
-        $(`#to-name`).text(to_name)
-        
-        axios({
-          url: `/api/getSchedules?from=${from_id}&to=${to_id}`,
-          method: "GET",
-          headers: {
-            'X-CSRFToken': csrf_token,
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-          }
-        }).then((res) => {
-          data = res.data
-          
-          $('#display-schedule').empty()
-          data.forEach((schedule) => {
-            console.log(schedule)
-            train_pk = Object.keys(schedule)[0]
-            from_data = JSON.parse(schedule[train_pk]['timetable']['from'])[0]
-            to_data = JSON.parse(schedule[train_pk]['timetable']['to'])[0]
-            console.log(from_data)
-            console.log(to_data)
-            $('#display-schedule').append(`
-              <div class="d-flex justify-content-center align-items-center rounded border w-100 p-3 my-3">
-                <div class="border-right text-center" style="min-width: 90px;">
-                  <figure class="w-25 mx-auto">
-                    <img src="{% static 'image/train.png' %}" class="mx-auto img-fluid" alt="Train">
-                  </figure>
-                  <h6>Train No.</h6>
-                  <h5 class="mb-0">200</h5>
-                </div>
-                <div class="d-none d-md-inline-block vertical-line mx-3 mx-md-4 mx-lg-5">
-                  <div class="circle d-block"></div>
-                  <div class="circle d-block"></div>
-                </div>
-                <div class="d-inline-block w-100 mr-auto px-2">
-                  <div class="d-block d-sm-flex justify-content-between">
-                    <span class="text-bold">${from_name}</span>
-                    <div class="d-inline-block ml-sm-1 ml-md-auto">
-                      <span class="mr-sm-3 mr-md-5">Dep.</span>
-                      <span class="text-bold">${from_data['fields']['departed_time']}</span>
+      if (from_id && to_id) {
+        if (from_id != to_id) {
+          $(`#from-name`).text(from_name)
+          $(`#to-name`).text(to_name)
+
+          axios({
+            url: `/api/getSchedules?from=${from_id}&to=${to_id}`,
+            method: "GET",
+            headers: {
+              'X-CSRFToken': csrf_token,
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            }
+          }).then((res) => {
+            data = res.data
+            
+            $('#display-schedule').empty()
+            data.forEach((schedule) => {
+              console.log(schedule)
+              train_pk = Object.keys(schedule)[0]
+              from_data = JSON.parse(schedule[train_pk]['timetable']['from'])[0]
+              to_data = JSON.parse(schedule[train_pk]['timetable']['to'])[0]
+              console.log(from_data)
+              console.log(to_data)
+              $('#display-schedule').append(`
+                <div class="d-flex justify-content-center align-items-center rounded border w-100 p-3 my-3">
+                  <div class="border-right text-center" style="min-width: 90px;">
+                    <figure class="w-25 mx-auto">
+                      <img src="{% static 'image/train.png' %}" class="mx-auto img-fluid" alt="Train">
+                    </figure>
+                    <h6>Train No.</h6>
+                    <h5 class="mb-0">200</h5>
+                  </div>
+                  <div class="d-none d-md-inline-block vertical-line mx-3 mx-md-4 mx-lg-5">
+                    <div class="circle d-block"></div>
+                    <div class="circle d-block"></div>
+                  </div>
+                  <div class="d-inline-block w-100 mr-auto px-2">
+                    <div class="d-block d-sm-flex justify-content-between">
+                      <span class="text-bold">${from_name}</span>
+                      <div class="d-inline-block ml-sm-1 ml-md-auto">
+                        <span class="mr-sm-3 mr-md-5">Dep.</span>
+                        <span class="text-bold">${from_data['fields']['departed_time']}</span>
+                      </div>
+                    </div>
+                    <hr>
+                    <div class="d-block d-sm-flex justify-content-between">
+                      <span class="text-bold">${to_name}</span>
+                      <div class="d-inline-block ml-sm-1 ml-md-auto">
+                        <span class="mr-sm-3 mr-md-5">Arr.</span>
+                        <span class="text-bold">${to_data['fields']['arrived_time']}</span>
+                      </div>
                     </div>
                   </div>
-                  <hr>
-                  <div class="d-block d-sm-flex justify-content-between">
-                    <span class="text-bold">${to_name}</span>
-                    <div class="d-inline-block ml-sm-1 ml-md-auto">
-                      <span class="mr-sm-3 mr-md-5">Arr.</span>
-                      <span class="text-bold">${to_data['fields']['arrived_time']}</span>
-                    </div>
+                  <div class="ml-lg-3">
+                    <input type="radio" class="d-none" name="selectedTicket" id="selectedTicket-${train_pk + "-" + from_data.pk + "-" + to_data.pk}" value="${train_pk + "-" + from_data.pk + "-" + to_data.pk}">
+                    <label for="selectedTicket-${train_pk + "-" + from_data.pk + "-" + to_data.pk}" class="selectTicket">
+                      <img src="{% static "image/circle.png" %}" alt="Uncheck">
+                    </label>
                   </div>
                 </div>
-                <div class="ml-lg-3">
-                  <input type="radio" class="d-none" name="selectedTicket" id="selectedTicket-1" value="1">
-                  <label for="selectedTicket-1" class="selectTicket">
-                    <img src="{% static "image/circle.png" %}" alt="Uncheck">
-                  </label>
-                </div>
-              </div>
-            `)
-          });
-          
-          $("#selected-schedule").slideDown(300, function() {
-            $("#display-schedule").show(200);
-          });
-        }).catch((err) => {
-          console.log('error')
-        })
+              `)
+            });
+            
+            $("#selected-schedule").slideDown(300, function() {
+              $("#display-schedule").show(200);
+            });
+          }).catch((err) => {
+            console.log('error')
+          })
+        } else {
+          $('#select-error').text('Please select different stations.')
+        }
       }
     })
 });

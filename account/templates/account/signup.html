@@ -22,7 +22,7 @@
         {% csrf_token %}
         <div class="form-group">
           <input type="text" class="form-control" name="{{ register_form.email.name }}" id="{{ register_form.email.id_for_label }}" 
-            value="{{ register_form.email.value }}" placeholder="Email" required>
+            value="{% if register_form.email.value %} {{ register_form.email.value }} {% endif %}" placeholder="Email" required>
         </div>
         <div class="form-group">
           <input type="password" class="form-control" name="{{ register_form.password.name }}" id="{{ register_form.password.id_for_label }}" placeholder="Password" required>
@@ -34,13 +34,13 @@
           <div class="col-12 col-md-6">
             <div class="form-group">
               <input type="text" class="form-control" name="{{ register_form.first_name.name }}" id="{{ register_form.last_name.id_for_label }}" 
-                value="{{ register_form.first_name.value }}"placeholder="First name" required>
+                value="{% if register_form.first_name.value %} {{ register_form.first_name.value }} {% endif %}"placeholder="First name" required>
             </div>
           </div>
           <div class="col-12 col-md-6">
             <div class="form-group">
               <input type="text" class="form-control" name="{{ register_form.last_name.name }}" id="{{ register_form.last_name.id_for_label }}" 
-                value="{{ register_form.last_name.value }}" placeholder="Surname" required>
+                value="{% if register_form.last_name.value %} {{ register_form.last_name.value }} {% endif %}" placeholder="Surname" required>
             </div>
           </div>
         </div>

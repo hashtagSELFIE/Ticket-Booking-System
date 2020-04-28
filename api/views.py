@@ -34,15 +34,19 @@ def fetch_schedules(request):
                     train_id=train.id)
                 from_filter = train_timetable.filter(station_id=from_st)
                 to_filter = train_timetable.filter(station_id=to_st)
-                if (from_filter and to_filter):
-                  schedules.append({
-                      train.id: {
-                          'train_name': train.train_name,
-                          'timetable': {
-                              'from': serializers.serialize('json', from_filter, fields=('station', 'arrived_time', 'departed_time')),
-                              'to': serializers.serialize('json', to_filter, fields=('station', 'arrived_time', 'departed_time'))
-                          }
-                      }
-                  })
+
+                print(from_filter[0].departed_time, to_filter[0].arrived_time)
+
+                if (from_filter != None and to_filter != None):
+                    if (from_filter[0].departed_time and to_filter[0].arrived_time and from_filter[0].departed_time < to_filter[0].arrived_time):
+                        schedules.append({
+                            train.id: {
+                                'train_name': train.train_name,
+                                'timetable': {
+                                    'from': serializers.serialize('json', from_filter, fields=('station', 'arrived_time', 'departed_time')),
+                                    'to': serializers.serialize('json', to_filter, fields=('station', 'arrived_time', 'departed_time'))
+                                }
+                            }
+                        })
         return JsonResponse(schedules, content_type='application/json', safe=False)
     return HttpResponse("bad request", status=400)
