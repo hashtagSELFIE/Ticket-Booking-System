@@ -89,14 +89,47 @@ class SignupView(View):
 
         context['register_form'] = register_form
         return render(request, 'account/signup.html', context=context)
-    
-    
+
+
 class EditView(LoginRequiredMixin, View):
     def get(self, request):
         context = prepare_context(request, show_navbar=True)
         account_form = AccountForm()
         context['account_form'] = account_form
+        register_form = RegisterForm()
+        context['register_form'] = register_form
+        user = request.user
+        context['user'] = user
+        account = Account.objects.get(user_id_id=user.id)
+        context['account'] = account
+
         return render(request, 'account/edit.html', context=context)
 
     def post(self, request):
-        return None
+        context = prepare_context(request, show_navbar=True)
+        register_form = RegisterForm(request.POST)
+        account_form = AccountForm(request.POST)
+
+        if register_form.is_valid() or account_form.is_valid():
+            cleaned_register = register_form.clean()
+            cleaned_account = account_form.clean()
+            print(cleaned_account, cleaned_register)
+
+            user = request.user
+            usernew = User.objects.get(pk=user.id)
+            usernew.first_name = cleaned_register['first_name']
+            usernew.last_name = cleaned_register['last_name']
+
+            account = Account.objects.get(user_id_id=user.id)
+            account.gender = cleaned_account['gender']
+            account.birth_date = cleaned_account['birth_date']
+
+            usernew.save()
+            account.save()
+
+            return redirect('/')
+
+        context['register_form'] = register_form
+        context['account_form'] = account_form
+
+        return render(request, 'account/edit.html', context=context)

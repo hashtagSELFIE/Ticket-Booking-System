@@ -6,22 +6,65 @@
     <div class="w-100 rounded border shadow p-5">
       <div class="row">
         <a class="col">
-          <h1>Editing Announcement #{{ announcement.id }}</h1>
+          <h1>Editing account {{ user.username }}</h1> <br>
           <div id="signup" class="mt-3">
             <form action="#" method="POST">
               {% csrf_token %}
+              {% comment %}
               <div class="form-group">
-                <input type="text" class="form-control" name="{{ announcement_form.announce_text.name }}"
-                       id="{{ announcement_form.announce_text.id_for_label }}"
-                       value="{{ announcement.announce_text }}" required>
+                <input type="text" class="form-control" name="{{ register_form.email.name }}"
+                       id="{{ register_form.email.id_for_label }}"
+                       value="{% if register_form.email.value %} {{ register_form.email.value }} {% endif %}{% if register_form.email.value is not True %}{{ user.email }}{% endif %}"
+                       placeholder="Email" required>
               </div>
-
               <div class="form-group">
-                <input type="number" class="form-control" name="view_count"
-                       id="view_count" value="{{ announcement.view_count }}"
-                       required>
+                <input type="password" class="form-control" name="{{ register_form.password.name }}"
+                       id="{{ register_form.password.id_for_label }}" placeholder="Password">
               </div>
+              <div class="form-group">
+                <input type="password" class="form-control" name="repassword" id="repassword-id"
+                       placeholder="Retype Password">
+              </div>
+            {% endcomment %}
+              <div class="row">
+                <div class="col-12 col-md-6">
+                  <div class="form-group">
+                    <input type="text" class="form-control" name="{{ register_form.first_name.name }}"
+                           id="{{ register_form.last_name.id_for_label }}"
+                           value="{% if register_form.first_name.value %} {{ register_form.first_name.value }} {% endif %}{% if register_form.first_name.value is not True %}{{ user.first_name }}{% endif %}"
+                           placeholder="First name" required>
+                  </div>
+                </div>
+                <div class="col-12 col-md-6">
+                  <div class="form-group">
+                    <input type="text" class="form-control" name="{{ register_form.last_name.name }}"
+                           id="{{ register_form.last_name.id_for_label }}"
+                           value="{% if register_form.last_name.value %} {{ register_form.last_name.value }} {% endif %}{% if register_form.last_name.value is not True %}{{ user.last_name }}{% endif %}"
+                           placeholder="Surname" required>
+                  </div>
+                </div>
+                <div class="col-12 col-md-6">
+                  <div class="form-group">
+                    <input type="date" class="form-control" name="{{ account_form.birth_date.name }}"
+                           id="{{ account_form.birth_date.id_for_label }}"
+                           value="{% if account_form.birth_date.value %} {{ account_form.birth_date.value }} {% endif %}{% if account_form.birth_date.value is not True %}{{ account.birth_date }}{% endif %}"
+                           placeholder="" required>
+                  </div>
+                </div>
 
+                <div class="col-12 col-md-6">
+                  <div class="form-group">
+                    <select class="form-control" name="{{ account_form.gender.name }}"
+                            id="{{ account_form.gender.id_for_label }}"
+                            value="{% if account_form.gender.value %} {{ account_form.gender.value }} {% endif %}{% if account_form.gender.value is not True %}{{ account.gender }}{% endif %}">
+                      <option value="1">MALE</option>
+                      <option value="2">FEMALE</option>
+                      <option value="3">PREFER</option>
+                    </select>
+                  </div>
+                </div>
+
+              </div>
               {% if error.errorMsg %}
                 <div class="form-group">
                   <small class="form-text" style="color: red">{{ error.errorMsg }}</small>
