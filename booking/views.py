@@ -36,24 +36,39 @@ class SelectTransaction(LoginRequiredMixin, View):
 
     def post(self, request):
         context = prepare_context(request, show_navbar=True)
+        context['selectedTicket'] = request.POST.get('selectedTicket')
 
-        user = User.objects.get(username=request.user.username)
-        account = Account.objects.get(user_id=user)
-        ticket_info = list(
-            map(int, request.POST.get('selectedTicket').split('-')))
-        print(account, ticket_info)
-
-        ticket = Ticket.objects.create(
-            buyer=account,
-            boardingTrain=Train.objects.get(pk=ticket_info[0]),
-            fromStation=Timetable.objects.get(pk=ticket_info[1]),
-            toStation=Timetable.objects.get(pk=ticket_info[2]),
-            transactionStatus=False,
-            bookingStatus=False
-        )
-
-        print(ticket)
         if request.POST.get('paymentMethod'):
-            return render(request, 'booking/successfulBooking.html', context=context)
+            payment_method = request.POST.get('paymentMethod')
+            user = User.objects.get(username=request.user.username)
+            account = Account.objects.get(user_id=user)
+            ticket_info = list(
+                map(int, request.POST.get('selectedTicket').split('-')))
+
+            ticket = Ticket.objects.create(
+                buyer=account,
+                boardingTrain=Train.objects.get(pk=ticket_info[0]),
+                fromStation=Timetable.objects.get(pk=ticket_info[1]),
+                toStation=Timetable.objects.get(pk=ticket_info[2]),
+                transactionInformation=payment_method,
+                transactionStatus=False,
+                bookingStatus=False
+            )
+            # print(payment_method, ticket)
+            context['ticket'] = ticket
+            return redirect('selectTransaction', ticket_id=ticket.id)
         else:
             return render(request, 'booking/selectTransaction.html', context=context)
+
+
+def successful_booking(request, ticket_id):
+    context = prepare_context(request, show_navbar=True)
+    ticket = Ticket.objects.get(id=ticket_id)
+    user = User.objects.get(username=request.user.username)
+    account = Account.objects.get(user_id=user)
+
+    if ticket.buyer.id != account.id:
+        return redirect('/')
+    else:
+        context['ticket'] = ticket
+        return render(request, 'booking/successfulBooking.html', context=context)
