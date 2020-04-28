@@ -2,7 +2,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
 from django.views import View
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from .models import Account
 from .forms import AccountForm, RegisterForm
 from .utils import prepare_context
@@ -62,7 +62,6 @@ class SignupView(View):
                 }
             else:
                 hasUser = User.objects.filter(email__exact=data_form['email'])
-                print(hasUser)
                 if not hasUser:
                     user = User.objects.create_user(
                         data_form['email'],
@@ -71,13 +70,17 @@ class SignupView(View):
                         first_name=data_form['first_name'],
                         last_name=data_form['last_name']
                     )
-                    user.groups.add('passenger')
+
+                    passenger_group = Group.objects.get(name='passenger')
+                    passenger_group.user_set.add(user)
+
                     user.save()
+                    passenger_group.save()
 
                     account = Account(user_id=user, user_type='US')
                     account.save()
 
-                    return redirect('/')
+                    return redirect('/login')
                 else:
                     context['error'] = {
                         'errorMsg': 'Email have been used!'

@@ -2,8 +2,11 @@ from django.shortcuts import redirect, render
 from django.http import HttpResponse
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import User
 from account.utils import prepare_context
 from schedule.models import Station
+from .models import Ticket
+from account.models import Account
 
 
 # Create your views here.
@@ -33,6 +36,13 @@ class SelectTransaction(LoginRequiredMixin, View):
 
     def post(self, request):
         context = prepare_context(request, show_navbar=True)
+
+        user = User.objects.get(username=request.user.username)
+        acconut = Account.objects.get(user_id=user)
+        print(account)
+        ticket_info = map(int, request.POST.get('selectedTicket').split('-'))
+
+        Ticket()
         if request.POST.get('paymentMethod'):
             return render(request, 'booking/successfulBooking.html', context=context)
         else:
