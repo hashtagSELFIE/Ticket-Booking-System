@@ -6,7 +6,10 @@
     <div class="w-100 rounded border shadow p-5">
       <div class="row">
         <a class="col">
-          <h1>Search For Schedules</h1>
+          <h1>Announcement List</h1>
+          <a href="{% url 'createAnnouncement' %}">
+            <div class="btn btn-primary float-right">Create New Announcement</div>
+          </a>
           <table class="table mt-3">
             <thead>
             <tr>
@@ -26,10 +29,11 @@
                     <td>{{ a.announce_text|truncatechars:100 }}</td>
                     <td>{{ a.announce_time|date:'d/M/yy' }}, {{ a.announce_time|time:'H:i' }}</td>
                     <td>
+                      {% csrf_token %}
                       <a href="{% url 'editAnnouncement' announcement_id=a.id %}">
                         <div class="btn btn-warning">Edit</div>
                       </a>
-                      <a href="{% url 'editAnnouncement' announcement_id=a.id %}">
+                      <a href="{% url 'deleteAnnouncement' announcement_id=a.id %}">
                         <div class="btn btn-danger">Delete</div>
                       </a>
                     </td>

@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+  <div class="my-4">
+    <div class="w-100 rounded border shadow p-5">
+      <div class="row">
+        <a class="col">
+          <h1>Editing Announcement #{{ announcement.id }}</h1>
+          <div id="signup" class="mt-3">
+            <form action="#" method="POST">
+              {% csrf_token %}
+              <div class="form-group">
+                <input type="text" class="form-control" name="{{ announcement_form.announce_text.name }}"
+                       id="{{ announcement_form.announce_text.id_for_label }}"
+                       value="{{ announcement.announce_text }}" required>
+              </div>
+
+              <div class="form-group">
+                <input type="number" class="form-control" name="view_count"
+                       id="view_count" value="{{ announcement.view_count }}"
+                       required>
+              </div>
+
+              {% if error.errorMsg %}
+                <div class="form-group">
+                  <small class="form-text" style="color: red">{{ error.errorMsg }}</small>
+                </div>
+              {% endif %}
+
+              <div class="text-center">
+                <button type="submit" class="btn btn-outline-dark px-5">Edit</button>
+              </div>
+            </form>
+          </div>
+
+      </div>
+    </div>
+  </div>
+  </div>
+{% endblock content %}
+
+{% block style %}
+  <style>
+  </style>
+{% endblock style %}
