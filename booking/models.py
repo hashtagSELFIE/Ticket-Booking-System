@@ -11,7 +11,7 @@ class Ticket(models.Model):
         Timetable, on_delete=models.CASCADE, related_name="fromStation")
     toStation = models.ForeignKey(
         Timetable, on_delete=models.CASCADE, related_name="toStation")
-    transactionInformation = models.TextField()
-    transactionStatus = models.BooleanField()
-    buyDate = models.DateField()
-    bookingStatus = models.BooleanField()
+    transactionInformation = models.TextField(default='')
+    transactionStatus = models.BooleanField(default=False)
+    buyDate = models.DateField(auto_now_add=True)
+    bookingStatus = models.BooleanField(default=False)

@@ -4,7 +4,7 @@ from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from account.utils import prepare_context
-from schedule.models import Station
+from schedule.models import Station, Timetable, Train
 from .models import Ticket
 from account.models import Account
 
@@ -38,11 +38,21 @@ class SelectTransaction(LoginRequiredMixin, View):
         context = prepare_context(request, show_navbar=True)
 
         user = User.objects.get(username=request.user.username)
-        acconut = Account.objects.get(user_id=user)
-        print(account)
-        ticket_info = map(int, request.POST.get('selectedTicket').split('-'))
+        account = Account.objects.get(user_id=user)
+        ticket_info = list(
+            map(int, request.POST.get('selectedTicket').split('-')))
+        print(account, ticket_info)
 
-        Ticket()
+        ticket = Ticket.objects.create(
+            buyer=account,
+            boardingTrain=Train.objects.get(pk=ticket_info[0]),
+            fromStation=Timetable.objects.get(pk=ticket_info[1]),
+            toStation=Timetable.objects.get(pk=ticket_info[2]),
+            transactionStatus=False,
+            bookingStatus=False
+        )
+
+        print(ticket)
         if request.POST.get('paymentMethod'):
             return render(request, 'booking/successfulBooking.html', context=context)
         else:
