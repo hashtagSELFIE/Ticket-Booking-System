@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from account.utils import prepare_context
+from schedule.models import Station
 
 
 # Create your views here.
@@ -11,6 +12,7 @@ class FindSchedule(LoginRequiredMixin, View):
 
     def get(self, request):
         context = prepare_context(request, show_navbar=True)
+        context['stations'] = Station.objects.all()
         return render(request, 'booking/searchSchedule.html', context=context)
 
     def post(self, request):
