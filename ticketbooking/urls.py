@@ -27,5 +27,5 @@ urlpatterns = [
     path('booking/', include('booking.urls')),
     path('schedule/', include('schedule.urls')),
     path('announcement/', include('announcement.urls')),
-
+    path('api/', include('api.urls')),
 ]
