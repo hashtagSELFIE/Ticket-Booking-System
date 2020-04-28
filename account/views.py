@@ -5,6 +5,7 @@ from django.views import View
 from django.contrib.auth.models import User
 from .models import Account
 from .forms import AccountForm, RegisterForm
+from .utils import prepare_context
 
 
 # Create your views here.
@@ -15,15 +16,11 @@ def logout_view(request):
 
 class LoginView(View):
     def get(self, request):
-        context = {
-            'show_navbar': True
-        }
+        context = prepare_context(request, show_navbar=True)
         return render(request, 'account/login.html', context=context)
 
     def post(self, request):
-        context = {
-            'show_navbar': True
-        }
+        context = prepare_context(request, show_navbar=True)
         username = request.POST.get('user')
         pwd = request.POST.get('password')
         if username and pwd:
@@ -44,19 +41,13 @@ class LoginView(View):
 
 class SignupView(View):
     def get(self, request):
-        context = {
-            'show_navbar': True
-        }
-
+        context = prepare_context(request, show_navbar=True)
         register_form = RegisterForm()
         context['register_form'] = register_form
         return render(request, 'account/signup.html', context=context)
 
     def post(self, request):
-        context = {
-            'show_navbar': True
-        }
-
+        context = prepare_context(request, show_navbar=True)
         repassword = request.POST.get('repassword')
         register_form = RegisterForm(request.POST)
 
