@@ -1,4 +1,4 @@
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
 from django.views import View
@@ -8,6 +8,11 @@ from .forms import AccountForm, RegisterForm
 
 
 # Create your views here.
+def logout_view(request):
+    logout(request)
+    return redirect('/')
+
+
 class LoginView(View):
     def get(self, request):
         context = {
@@ -23,7 +28,8 @@ class LoginView(View):
         pwd = request.POST.get('password')
         if username and pwd:
             user = authenticate(username=username, password=pwd)
-            if user:
+            if user is not None:
+                login(request, user)
                 return redirect('/')
             else:
                 context['error'] = {
@@ -74,7 +80,7 @@ class SignupView(View):
                         first_name=data_form['first_name'],
                         last_name=data_form['last_name']
                     )
-                    user.groups.set(['passenger'])
+                    user.groups.add('passenger')
                     user.save()
 
                     account = Account(user_id=user, user_type='US')
