@@ -86,7 +86,7 @@ class EditAnnouncement(LoginRequiredMixin, View):
         return render(request, 'announcement/editAnnouncement.html', context=context)
 
     def post(self, request, announcement_id):
-        # context = prepare_context(request, show_navbar=True)
+        context = prepare_context(request, show_navbar=True)
         announcement = Announcement.objects.get(pk=announcement_id)
         text = request.POST.get('announce_text')
         count = request.POST.get('view_count')
@@ -100,7 +100,8 @@ class EditAnnouncement(LoginRequiredMixin, View):
         announcement.announce_time = datetime.now()
         announcement.save()
 
-        redirect('/announcement/')
+        return redirect('/announcement/')
+
 
 
 @login_required()

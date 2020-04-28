@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
 from django.views import View
@@ -88,3 +89,14 @@ class SignupView(View):
 
         context['register_form'] = register_form
         return render(request, 'account/signup.html', context=context)
+    
+    
+class EditView(LoginRequiredMixin, View):
+    def get(self, request):
+        context = prepare_context(request, show_navbar=True)
+        account_form = AccountForm()
+        context['account_form'] = account_form
+        return render(request, 'account/edit.html', context=context)
+
+    def post(self, request):
+        return None
