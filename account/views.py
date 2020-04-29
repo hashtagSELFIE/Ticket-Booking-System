@@ -133,3 +133,36 @@ class EditView(LoginRequiredMixin, View):
         context['account_form'] = account_form
 
         return render(request, 'account/edit.html', context=context)
+
+
+class ChangePassword(LoginRequiredMixin, View):
+    def get(self, request):
+        context = prepare_context(request, show_navbar=True)
+        register_form = RegisterForm()
+        context['register_form'] = register_form
+
+        return render(request, 'account/changePassword.html', context=context)
+
+    def post(self, request):
+        context = prepare_context(request, show_navbar=True)
+        repassword = request.POST.get('repassword')
+        register_form = RegisterForm(request.POST)
+        user = request.user
+
+        if register_form.is_valid():
+            data_form = register_form.clean()
+            print(data_form['password'], repassword)
+
+            if data_form['password'] != repassword:
+                context['error'] = {
+                    'errorMsg': 'Password mismatch!'
+                }
+            else:
+                
+                user.set_password(data_form['password'])
+                user.save()
+
+                return redirect('/')
+
+        context['register_form'] = register_form
+        return render(request, 'account/signup.html', context=context)
