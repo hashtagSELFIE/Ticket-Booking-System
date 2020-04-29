@@ -158,7 +158,7 @@ class ChangePassword(LoginRequiredMixin, View):
                     'errorMsg': 'Password mismatch!'
                 }
             else:
-                
+
                 user.set_password(data_form['password'])
                 user.save()
 

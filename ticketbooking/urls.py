@@ -31,4 +31,5 @@ urlpatterns = [
     path('schedule/', include('schedule.urls')),
     path('announcement/', include('announcement.urls')),
     path('api/', include('api.urls')),
+    path('transaction', include('transaction.urls')),
 ]
