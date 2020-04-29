@@ -13,7 +13,7 @@
     </div>
     <div class="row">
       <div class="col">
-        <h1>Search For Schedules</h1>
+        <h1>Search For Ticket</h1>
         <div class="row" action="#" method="POST">
           <div class="col-6">
             {% csrf_token %}
@@ -52,7 +52,80 @@
             <button type="submit" class="btn btn-dark px-3 px-md-5 ml-auto">Booking a selected ticket</button>
           </div>
           
-          <div id="display-schedule">
+          <div id="display-schedule">        
+            <div class="d-flex justify-content-center align-items-center rounded border w-100 p-3 my-3">
+              <div class="border-right text-center" style="min-width: 90px;">
+                <figure class="w-25 mx-auto">
+                  <img src="{% static 'image/train.png' %}" class="mx-auto img-fluid" alt="Train">
+                </figure>
+                <h6>Train No.</h6>
+                <h5 class="mb-0">200</h5>
+              </div>
+              <div class="d-none d-md-inline-block vertical-line mx-3 mx-md-4 mx-lg-5">
+                <div class="circle d-block"></div>
+                <div class="circle d-block"></div>
+              </div>
+              <div class="d-inline-block w-100 mr-auto px-2">
+                <div class="d-block d-sm-flex justify-content-between">
+                  <span class="text-bold">{{ schedule.from }}</span>
+                  <div class="d-inline-block ml-sm-1 ml-md-auto">
+                    <span class="mr-sm-3 mr-md-5">Dep.</span>
+                    <span class="text-bold">09.12</span>
+                  </div>
+                </div>
+                <hr>
+                <div class="d-block d-sm-flex justify-content-between">
+                  <span class="text-bold">{{ schedule.to }}</span>
+                  <div class="d-inline-block ml-sm-1 ml-md-auto">
+                    <span class="mr-sm-3 mr-md-5">Arr.</span>
+                    <span class="text-bold">19.40</span>
+                  </div>
+                </div>
+              </div>
+              <div class="ml-lg-3">
+                <input type="radio" class="d-none" name="selectedTicket" id="selectedTicket-2" value="2">
+                <label for="selectedTicket-2" class="selectTicket">
+                  <img src="{% static "image/circle.png" %}" alt="Uncheck">
+                </label>
+              </div>
+            </div>
+
+            <div class="d-flex justify-content-center align-items-center rounded border w-100 p-3 my-3">
+              <div class="border-right text-center" style="min-width: 90px;">
+                <figure class="w-25 mx-auto">
+                  <img src="{% static 'image/train.png' %}" class="mx-auto img-fluid" alt="Train">
+                </figure>
+                <h6>Train No.</h6>
+                <h5 class="mb-0">200</h5>
+              </div>
+              <div class="d-none d-md-inline-block vertical-line mx-3 mx-md-4 mx-lg-5">
+                <div class="circle d-block"></div>
+                <div class="circle d-block"></div>
+              </div>
+              <div class="d-inline-block w-100 mr-auto px-2">
+                <div class="d-block d-sm-flex justify-content-between">
+                  <span class="text-bold">{{ schedule.from }}</span>
+                  <div class="d-inline-block ml-sm-1 ml-md-auto">
+                    <span class="mr-sm-3 mr-md-5">Dep.</span>
+                    <span class="text-bold">09.12</span>
+                  </div>
+                </div>
+                <hr>
+                <div class="d-block d-sm-flex justify-content-between">
+                  <span class="text-bold">{{ schedule.to }}</span>
+                  <div class="d-inline-block ml-sm-1 ml-md-auto">
+                    <span class="mr-sm-3 mr-md-5">Arr.</span>
+                    <span class="text-bold">19.40</span>
+                  </div>
+                </div>
+              </div>
+              <div class="ml-lg-3">
+                <input type="radio" class="d-none" name="selectedTicket" id="selectedTicket-3" value="3">
+                <label for="selectedTicket-3" class="selectTicket">
+                  <img src="{% static "image/circle.png" %}" alt="Uncheck">
+                </label>
+              </div>
+            </div>
           </div>
         </form>
       </div>
@@ -247,8 +320,7 @@ $(function () {
             $("#selected-schedule").slideDown(300, function() {
               $("#display-schedule").show(200);
             });
-          }).catch((err) => {           
-            $('#display-schedule').empty()
+          }).catch((err) => {
             console.log('error')
           })
         } else {

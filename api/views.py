@@ -35,9 +35,9 @@ def fetch_schedules(request):
                 from_filter = train_timetable.filter(station_id=from_st)
                 to_filter = train_timetable.filter(station_id=to_st)
 
-                print(from_filter[0].departed_time, to_filter[0].arrived_time)
+                # print(from_filter[0].departed_time, to_filter[0].arrived_time)
 
-                if (from_filter != None and to_filter != None):
+                if (from_filter != None and to_filter != None and len(from_filter) > 0 and len(to_filter) > 0):
                     if (from_filter[0].departed_time and to_filter[0].arrived_time and from_filter[0].departed_time < to_filter[0].arrived_time):
                         schedules.append({
                             train.id: {

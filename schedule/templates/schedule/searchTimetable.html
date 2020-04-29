@@ -4,15 +4,6 @@
 {% block content %}
   <div class="my-4">
     <div class="w-100 rounded border shadow p-5">
-      {% comment %}
-    <div class="progress w-50 mx-auto my-5" style="height: 3px;">
-      <div class="circle"></div>
-      <div class="circle"></div>
-      <div class="circle"></div>
-      <div class="circle"></div>
-      <div class="progress-bar" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-    </div>
-    {% endcomment %}
       <div class="row">
         <div class="col">
           <h1>Search For Schedules</h1>
@@ -22,8 +13,12 @@
               <h6>From</h6>
               <div class="form-group ml-0">
                 <select class="form-control" name="from">
-                  {% for st in station %}
-                    <option value="{{ st.id }}">{{ st.english_station_name }}</option>
+                  {% for st in stations %}
+                    {% if schedule and schedule.from.id == st.id %}
+                      <option value="{{ st.id }}" selected>{{ st.english_station_name }}</option>
+                    {% else %}
+                      <option value="{{ st.id }}">{{ st.english_station_name }}</option>
+                    {% endif %}
                   {% endfor %}
                 </select>
               </div>
@@ -32,144 +27,81 @@
               <h6>To</h6>
               <div class="form-group ml-0">
                 <select class="form-control" name="to">
-                  {% for st in station %}
-                    <option value="{{ st.id }}">{{ st.english_station_name }}</option>
+                  {% for st in stations %}
+                    {% if schedule and schedule.to.id == st.id %}
+                      <option value="{{ st.id }}" selected>{{ st.english_station_name }}</option>
+                    {% else %}
+                      <option value="{{ st.id }}">{{ st.english_station_name }}</option>
+                    {% endif %}
                   {% endfor %}
                 </select>
               </div>
             </div>
-            <button type="submit" class="btn btn-dark px-5 mx-auto">Search</button>
+            
+            {% if error.errorMsg %}
+              <div class="col-12">
+                <small id="select-error" class="mb-3" style="color: red;">{{ error.errorMsg }}</small>
+              </div>
+            {% endif %}
+            <div class="col-12 my-2 text-center">
+              <button id="search-schedule" class="btn btn-dark px-5 mx-auto">Search</button>
+            </div>
           </form>
 
           {% if schedule != null %}
-            <hr>
-            <div class="py-2">
+            <form class="py-2" action="{% url 'selectTransaction' %}" method="POST">
+              <hr>
+              {% csrf_token %}
               <div class="d-flex justify-content-between">
-                <h3>Search : {{ schedule.from }} - {{ schedule.to }}</h3>
+                <h3>Search : {{ schedule.from.english_station_name }} - {{ schedule.to.english_station_name }}</h3>
                 <button type="submit" class="btn btn-dark px-3 px-md-5 ml-auto">Booking a selected
                   ticket
                 </button>
               </div>
 
               <div id="display-schedule">
-                <div class="d-flex justify-content-center align-items-center rounded border w-100 p-3 my-3">
-                  <div class="border-right text-center" style="min-width: 90px;">
-                    <figure class="w-25 mx-auto">
-                      <img src="{% static 'image/train.png' %}" class="mx-auto img-fluid"
-                           alt="Train">
-                    </figure>
-                    <h6>Train No.</h6>
-                    <h5 class="mb-0">200</h5>
-                  </div>
-                  <div class="d-none d-md-inline-block vertical-line mx-3 mx-md-4 mx-lg-5">
-                    <div class="circle d-block"></div>
-                    <div class="circle d-block"></div>
-                  </div>
-                  <div class="d-inline-block w-100 mr-auto px-2">
-                    <div class="d-block d-sm-flex justify-content-between">
-                      <span class="text-bold">{{ schedule.from }}</span>
-                      <div class="d-inline-block ml-sm-1 ml-md-auto">
-                        <span class="mr-sm-3 mr-md-5">Dep.</span>
-                        <span class="text-bold">09.12</span>
+                {% for td in timetables %}
+                  <div class="d-flex justify-content-center align-items-center rounded border w-100 p-3 my-3">
+                    <div class="border-right text-center" style="min-width: 90px;">
+                      <figure class="w-25 mx-auto">
+                        <img src="{% static 'image/train.png' %}" class="mx-auto img-fluid"
+                            alt="Train">
+                      </figure>
+                      <h6>Train No.</h6>
+                      <h5 class="mb-0">{{ td.train.train_name }}</h5>
+                    </div>
+                    <div class="d-none d-md-inline-block vertical-line mx-3 mx-md-4 mx-lg-5">
+                      <div class="circle d-block"></div>
+                      <div class="circle d-block"></div>
+                    </div>
+                    <div class="d-inline-block w-100 mr-auto px-2">
+                      <div class="d-block d-sm-flex justify-content-between">
+                        <span class="text-bold">{{ td.schedule.from.station.english_station_name }}</span>
+                        <div class="d-inline-block ml-sm-1 ml-md-auto">
+                          <span class="mr-sm-3 mr-md-5">Dep.</span>
+                          <span class="text-bold">{{ td.schedule.from.departed_time }}</span>
+                        </div>
+                      </div>
+                      <hr>
+                      <div class="d-block d-sm-flex justify-content-between">
+                        <span class="text-bold">{{ td.schedule.to.station.english_station_name }}</span>
+                        <div class="d-inline-block ml-sm-1 ml-md-auto">
+                          <span class="mr-sm-3 mr-md-5">Arr.</span>
+                          <span class="text-bold">{{ td.schedule.to.arrived_time }}</span>
+                        </div>
                       </div>
                     </div>
-                    <hr>
-                    <div class="d-block d-sm-flex justify-content-between">
-                      <span class="text-bold">{{ schedule.to }}</span>
-                      <div class="d-inline-block ml-sm-1 ml-md-auto">
-                        <span class="mr-sm-3 mr-md-5">Arr.</span>
-                        <span class="text-bold">19.40</span>
-                      </div>
+                    <div class="ml-lg-3">
+                      <input type="radio" class="d-none" name="selectedTicket" id="selectedTicket-{{ td.train.id }}-{{ td.schedule.from.pk }}-{{ td.schedule.to.pk }}"
+                            value="{{ td.train.id }}-{{ td.schedule.from.id }}-{{ td.schedule.to.id }}">
+                      <label for="selectedTicket-{{ td.train.id }}-{{ td.schedule.from.id }}-{{ td.schedule.to.id }}" class="selectTicket">
+                        <img src="{% static 'image/circle.png' %}" alt="Uncheck">
+                      </label>
                     </div>
                   </div>
-                  <div class="ml-lg-3">
-                    <input type="radio" class="d-none" name="selectedTicket" id="selectedTicket-1"
-                           value="1">
-                    <label for="selectedTicket-1" class="selectTicket">
-                      <img src="{% static 'image/circle.png' %}" alt="Uncheck">
-                    </label>
-                  </div>
-                </div>
-
-                <div class="d-flex justify-content-center align-items-center rounded border w-100 p-3 my-3">
-                  <div class="border-right text-center" style="min-width: 90px;">
-                    <figure class="w-25 mx-auto">
-                      <img src="{% static 'image/train.png' %}" class="mx-auto img-fluid"
-                           alt="Train">
-                    </figure>
-                    <h6>Train No.</h6>
-                    <h5 class="mb-0">200</h5>
-                  </div>
-                  <div class="d-none d-md-inline-block vertical-line mx-3 mx-md-4 mx-lg-5">
-                    <div class="circle d-block"></div>
-                    <div class="circle d-block"></div>
-                  </div>
-                  <div class="d-inline-block w-100 mr-auto px-2">
-                    <div class="d-block d-sm-flex justify-content-between">
-                      <span class="text-bold">{{ schedule.from }}</span>
-                      <div class="d-inline-block ml-sm-1 ml-md-auto">
-                        <span class="mr-sm-3 mr-md-5">Dep.</span>
-                        <span class="text-bold">09.12</span>
-                      </div>
-                    </div>
-                    <hr>
-                    <div class="d-block d-sm-flex justify-content-between">
-                      <span class="text-bold">{{ schedule.to }}</span>
-                      <div class="d-inline-block ml-sm-1 ml-md-auto">
-                        <span class="mr-sm-3 mr-md-5">Arr.</span>
-                        <span class="text-bold">19.40</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="ml-lg-3">
-                    <input type="radio" class="d-none" name="selectedTicket" id="selectedTicket-2"
-                           value="2">
-                    <label for="selectedTicket-2" class="selectTicket">
-                      <img src="{% static 'image/circle.png' %}" alt="Uncheck">
-                    </label>
-                  </div>
-                </div>
-
-                <div class="d-flex justify-content-center align-items-center rounded border w-100 p-3 my-3">
-                  <div class="border-right text-center" style="min-width: 90px;">
-                    <figure class="w-25 mx-auto">
-                      <img src="{% static 'image/train.png' %}" class="mx-auto img-fluid"
-                           alt="Train">
-                    </figure>
-                    <h6>Train No.</h6>
-                    <h5 class="mb-0">200</h5>
-                  </div>
-                  <div class="d-none d-md-inline-block vertical-line mx-3 mx-md-4 mx-lg-5">
-                    <div class="circle d-block"></div>
-                    <div class="circle d-block"></div>
-                  </div>
-                  <div class="d-inline-block w-100 mr-auto px-2">
-                    <div class="d-block d-sm-flex justify-content-between">
-                      <span class="text-bold">{{ schedule.from }}</span>
-                      <div class="d-inline-block ml-sm-1 ml-md-auto">
-                        <span class="mr-sm-3 mr-md-5">Dep.</span>
-                        <span class="text-bold">09.12</span>
-                      </div>
-                    </div>
-                    <hr>
-                    <div class="d-block d-sm-flex justify-content-between">
-                      <span class="text-bold">{{ schedule.to }}</span>
-                      <div class="d-inline-block ml-sm-1 ml-md-auto">
-                        <span class="mr-sm-3 mr-md-5">Arr.</span>
-                        <span class="text-bold">19.40</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="ml-lg-3">
-                    <input type="radio" class="d-none" name="selectedTicket" id="selectedTicket-3"
-                           value="3">
-                    <label for="selectedTicket-3" class="selectTicket">
-                      <img src="{% static 'image/circle.png' %}" alt="Uncheck">
-                    </label>
-                  </div>
-                </div>
+                {% endfor %}
               </div>
-            </div>
+            </form>
           {% endif %}
           {% if schedule == null %}
             <div class="py-2">
@@ -200,7 +132,7 @@
                             {% for tt in timetable %}
                               {% if tr.id == tt.train_id and tt.arrived_time is None %}
                                 <div class="d-block d-sm-flex justify-content-between">
-                                  {% for st in station %}
+                                  {% for st in stations %}
                                     {% if tt.station_id == st.id %}
                                       <span class="text-bold">{{ st.english_station_name }}</span>
                                     {% endif %}
@@ -216,7 +148,7 @@
                             {% for tt in timetable %}
                               {% if tr.id == tt.train_id and tt.departed_time is None %}
                                 <div class="d-block d-sm-flex justify-content-between ">
-                                  {% for st in station %}
+                                  {% for st in stations %}
                                     {% if tt.station_id == st.id %}
                                       <span class="text-bold">{{ st.english_station_name }}</span>
                                     {% endif %}
@@ -234,7 +166,7 @@
                         <div class="collapse w-100 mt-3" id="collapse_{{ tr.id }}">
                           <div class="card card-body">
                             {% for tt in timetable %}
-                              {% for st in station %}
+                              {% for st in stations %}
                                 {% if tt.station_id == st.id and tr.id == tt.train_id %}
                                   <p><b>{{ st.english_station_name }}</b> {{ tt.arrived_time | time:'H:i' }}</p>
                                   <hr>
