@@ -19,13 +19,12 @@ from account.views import LoginView, SignupView, logout_view, EditView, ChangePa
 import announcement.views
 
 
-
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', announcement.views.dashboard, name="dashboard"),
     path('login', LoginView.as_view(), name="login"),
     path('logout', logout_view, name="logout"),
-    path('editprofile', EditView.as_view(), name="ed"),
+    path('editprofile', EditView.as_view(), name="editProfile"),
     path('changepassword', ChangePassword.as_view(), name='changePassword'),
     path('signup', SignupView.as_view(), name="signup"),
     path('booking/', include('booking.urls')),

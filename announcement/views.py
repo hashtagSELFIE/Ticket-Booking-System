@@ -11,6 +11,7 @@ from .models import Announcement
 from .forms import AnnouncementForm
 from account.models import Account, Announcer
 from account.utils import prepare_context
+from schedule.models import Station
 
 
 # Create your views here.
@@ -19,7 +20,8 @@ def dashboard(request):
 
     context = {
         'show_navbar': True,
-        'announcement': Announcement.objects.order_by("-announce_time")
+        'announcement': Announcement.objects.order_by("-announce_time"),
+        'stations': Station.objects.all()
     }
     return render(request, 'dashboard.html', context=context)
 
@@ -31,7 +33,8 @@ class ViewAnnouncement(LoginRequiredMixin, View):
         context['user'] = user
         account = Account.objects.get(user_id_id=user.id)
         # announcer = Announcer.objects.get(user_id=account.id)
-        context['announcement'] = Announcement.objects.filter(announcer_user_id=account.id)
+        context['announcement'] = Announcement.objects.filter(
+            announcer_user_id=account.id)
 
         return render(request, 'announcement/viewAnnouncement.html', context=context)
 
@@ -101,7 +104,6 @@ class EditAnnouncement(LoginRequiredMixin, View):
         announcement.save()
 
         return redirect('/announcement/')
-
 
 
 @login_required()

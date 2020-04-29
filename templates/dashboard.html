@@ -4,23 +4,28 @@
 {% block content %}
   <div class="my-4">
     <section>
-      <div class="row justify-content-center align-items-center">
-        <div class="col-12 col-lg-5">
+      <form action="{% url 'searchTimetable' %}" method="POST" class="row justify-content-center align-items-center">
+        {% csrf_token %}
+        <div class="col-12 col-lg-8">
           <h6>From</h6>
           <div class="form-group ml-0">
-            <input type="text" class="form-control d-inline-block" style="width: 42.5%" name="" id="" placeholder="">
+            <select class="form-control d-inline-block" style="width: 45%" name="from">
+              {% for st in stations %}
+                <option value="{{ st.id }}">{{ st.english_station_name }}</option>
+              {% endfor %}
+            </select>
             <span>To</span>
-            <input type="text" class="form-control d-inline-block" style="width: 42.5%" name="" id="" placeholder="">
+            <select class="form-control d-inline-block" style="width: 45%" name="to">
+              {% for st in stations %}
+                <option value="{{ st.id }}">{{ st.english_station_name }}</option>
+              {% endfor %}
+            </select>
           </div>
         </div>
-        <div class="col-12 col-lg-5 my-3 my-lg-0">
-          <h6>Select</h6>
-          <span style="font-weight: 500">Traveling Date</span>
+        <div class="col-12 col-lg-2 ml-auto">
+          <button type="submit" class="btn btn-outline-dark">Search for schedule</button>
         </div>
-        <div class="col-12 col-lg-2">
-          <button type="button" class="btn btn-outline-dark">Search for schedule</button>
-        </div>
-      </div>
+      </form>
     </section>
     <section class="my-5">
       <div class="d-flex flex-wrap justify-content-between" style="font-weight: 200">
@@ -49,7 +54,6 @@
         <tr>
           <th scope="col">Announcement</th>
           <th scope="col">Announced Date</th>
-          <th scope="col">View Count</th>
         </tr>
         </thead>
         <tbody>
@@ -59,7 +63,6 @@
             <tr>
               <th scope="row">{{ a.announce_text|truncatechars:100 }}</th>
               <td>{{ a.announce_time|date:'d/M/yy' }}, {{ a.announce_time|time:'H:i' }}</td>
-              <td>{{ a.view_count }}</td>
             </tr>
           </div>
           <div class="collapse w-100 mt-3" id="collapse_{{ a.id }}">
