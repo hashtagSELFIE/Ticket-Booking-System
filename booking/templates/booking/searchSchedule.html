@@ -49,7 +49,7 @@
           {% csrf_token %}
           <div class="d-flex justify-content-between">
             <h3>Search : <span id="from-name"></span> - <span id="to-name"></span></h3>
-            <button type="submit" class="btn btn-dark px-3 px-md-5 ml-auto">Booking a selected ticket</button>
+            <button id="booking-ticket" type="submit" class="btn btn-dark px-3 px-md-5 ml-auto">Booking a selected ticket</button>
           </div>
           
           <div id="display-schedule">
@@ -170,6 +170,7 @@ $(function () {
 
     $("#selected-schedule").hide()
     $("#display-schedule").hide()
+
     // Fetch schedules by input
     $('#search-schedule').on('click', function (event) {
       event.preventDefault()
@@ -235,7 +236,7 @@ $(function () {
                     </div>
                   </div>
                   <div class="ml-lg-3">
-                    <input type="radio" class="d-none" name="selectedTicket" id="selectedTicket-${train_pk + "-" + from_data.pk + "-" + to_data.pk}" value="${train_pk + "-" + from_data.pk + "-" + to_data.pk}">
+                    <input type="radio" class="d-none" name="selectedTicket" id="selectedTicket-${train_pk + "-" + from_data.pk + "-" + to_data.pk}" value="${train_pk + "-" + from_data.pk + "-" + to_data.pk}" required>
                     <label for="selectedTicket-${train_pk + "-" + from_data.pk + "-" + to_data.pk}" class="selectTicket">
                       <img src="{% static "image/circle.png" %}" alt="Uncheck">
                     </label>

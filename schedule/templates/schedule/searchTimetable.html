@@ -93,7 +93,7 @@
                     </div>
                     <div class="ml-lg-3">
                       <input type="radio" class="d-none" name="selectedTicket" id="selectedTicket-{{ td.train.id }}-{{ td.schedule.from.pk }}-{{ td.schedule.to.pk }}"
-                            value="{{ td.train.id }}-{{ td.schedule.from.id }}-{{ td.schedule.to.id }}">
+                            value="{{ td.train.id }}-{{ td.schedule.from.id }}-{{ td.schedule.to.id }}" required>
                       <label for="selectedTicket-{{ td.train.id }}-{{ td.schedule.from.id }}-{{ td.schedule.to.id }}" class="selectTicket">
                         <img src="{% static 'image/circle.png' %}" alt="Uncheck">
                       </label>
