@@ -61,6 +61,35 @@ class SelectTransaction(LoginRequiredMixin, View):
             return render(request, 'booking/selectTransaction.html', context=context)
 
 
+class BookingHistory(LoginRequiredMixin, View):
+    def get(self, request):
+        context = prepare_context(request, show_navbar=True)
+        user = User.objects.get(username=request.user.username)
+        account = Account.objects.get(user_id=user)
+        tickets = Ticket.objects.filter(buyer=account).order_by("-buyDate"),
+        if tickets:
+            ticket = {}
+            for t in tickets[0]:
+                if t.buyDate in ticket.keys():
+                    ticket[t.buyDate].append(t)
+                else:
+                    ticket[t.buyDate] = [t]
+            print(ticket)
+            context['ticket'] = ticket
+            print(context['ticket'])
+        return render(request, 'booking/historyBooking.html', context=context)
+
+    def post(self, request):
+        context = prepare_context(request, show_navbar=True)
+        user = User.objects.get(username=request.user.username)
+        account = Account.objects.get(user_id=user)
+        tickets = Ticket.objects.filter(buyer=account).order_by("-buyDate"),
+        if tickets:
+            context['ticket'] = list(map(lambda t: t, tickets[0]))
+            print(context['ticket'])
+        return render(request, 'booking/historyBooking.html', context=context)
+
+
 def successful_booking(request, ticket_id):
     context = prepare_context(request, show_navbar=True)
     ticket = Ticket.objects.get(id=ticket_id)

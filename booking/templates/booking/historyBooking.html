@@ -4,130 +4,63 @@
 {% block content %}
 <div class="my-4">
   <div class="w-100 rounded border shadow p-3 p-lg-4">
-    <div id="progress-bar" class="my-5">
-      <div id="line">
-        <div class="circle active" style="left: 0%;"></div>
-        <div class="circle" style="left: 49.25%;"></div>
-        <div class="circle" style="left: 98.25%;"></div>
-      </div>
-    </div>
     <div class="row">
       <div class="col">
-        <h1>Search For Ticket</h1>
-        <div class="row" action="#" method="POST">
-          <div class="col-6">
-            {% csrf_token %}
-            <h6>From</h6>
-            <div class="form-group ml-0">
-              <select id="from-select" class="form-control" name="from">
-                {% for st in stations %}
-                  <option value="{{st.id}}" data-name="{{st.english_station_name}}">{{st.english_station_name}}</option>
-                {% endfor %}
-              </select>
-            </div>
-          </div>
-          <div class="col-6">
-            <h6>To</h6>
-            <div class="form-group ml-0">
-              <select id="to-select" class="form-control" name="to">
-                {% for st in stations %}
-                  <option value="{{st.id}}" data-name="{{st.english_station_name}}">{{st.english_station_name}}</option>
-                {% endfor %}
-              </select>
-            </div>
-          </div>
-          <div class="col-12">
-            <small id="select-error" class="mb-3" style="color: red;"></small>
-          </div>
-          <div class="col-12 my-2 text-center">
-            <button id="search-schedule" class="btn btn-dark px-5 mx-auto">Search</button>
+        <h1>View Booking History</h1>
+        <div id="selected-schedule"  class="my-3">
+          <div id="display-schedule">
+            {% if ticket %}
+              {% for date, items in ticket.items %}
+                <div class="d-block">
+                  <h3>{{ date }}</h3>
+                  {% for t in items  %}
+                    <div class="d-flex justify-content-center align-items-center rounded border w-100 p-3 my-3">
+                      <div class="border-right text-center" style="min-width: 90px;">
+                        <figure class="w-25 mx-auto">
+                          <img src="{% static 'image/train.png' %}" class="mx-auto img-fluid" alt="Train">
+                        </figure>
+                        <h6>Train No.</h6>
+                        <h5 class="mb-0">{{ t.boardingTrain.train_name }}</h5>
+                      </div>
+                      <div class="d-none d-md-inline-block vertical-line mx-3 mx-md-4 mx-lg-5">
+                        <div class="circle d-block"></div>
+                        <div class="circle d-block"></div>
+                      </div>
+                      <div class="d-inline-block w-100 mr-auto px-2" style="border-right: 1px dashed #707070;">
+                        <div class="row">
+                          <div class="col-12">
+                            <div class="d-block d-sm-flex justify-content-between">
+                              <span class="text-bold">{{ t.fromStation.station.english_station_name }}</span>
+                              <div class="d-inline-block ml-sm-1 ml-md-auto">
+                                <span class="mr-sm-3 mr-md-5">Dep.</span>
+                                <span class="text-bold d-inline-block text-right" style="width: 90px">{{ t.fromStation.departed_time }}</span>
+                              </div>
+                            </div>
+                            <hr>
+                            <div class="d-block d-sm-flex justify-content-between">
+                              <span class="text-bold">{{ t.toStation.station.english_station_name }}</span>
+                              <div class="d-inline-block ml-sm-1 ml-md-auto">
+                                <span class="mr-sm-3 mr-md-5">Arr.</span>
+                                <span class="text-bold d-inline-block text-right" style="width: 90px">{{ t.toStation.arrived_time }}</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  {% endfor %}
+                </div>
+              {% endfor %}
+            {% else %}
+              <div class="text-center">
+                <h1>You don't have any booking ticket yet!</h1>
+                <a href={% url 'searchSchedules' %} class="my-3">
+                  <h3 class="text-underline">Booking new one!</h3>
+                </a>
+              </div>
+            {% endif %}
           </div>
         </div>
-
-        <form id="selected-schedule" action="{% url 'selectTransaction' %}" method="POST">
-          <hr>
-          {% csrf_token %}
-          <div class="d-flex justify-content-between">
-            <h3>Search : <span id="from-name"></span> - <span id="to-name"></span></h3>
-            <button type="submit" class="btn btn-dark px-3 px-md-5 ml-auto">Booking a selected ticket</button>
-          </div>
-          
-          <div id="display-schedule">        
-            <div class="d-flex justify-content-center align-items-center rounded border w-100 p-3 my-3">
-              <div class="border-right text-center" style="min-width: 90px;">
-                <figure class="w-25 mx-auto">
-                  <img src="{% static 'image/train.png' %}" class="mx-auto img-fluid" alt="Train">
-                </figure>
-                <h6>Train No.</h6>
-                <h5 class="mb-0">200</h5>
-              </div>
-              <div class="d-none d-md-inline-block vertical-line mx-3 mx-md-4 mx-lg-5">
-                <div class="circle d-block"></div>
-                <div class="circle d-block"></div>
-              </div>
-              <div class="d-inline-block w-100 mr-auto px-2">
-                <div class="d-block d-sm-flex justify-content-between">
-                  <span class="text-bold">{{ schedule.from }}</span>
-                  <div class="d-inline-block ml-sm-1 ml-md-auto">
-                    <span class="mr-sm-3 mr-md-5">Dep.</span>
-                    <span class="text-bold">09.12</span>
-                  </div>
-                </div>
-                <hr>
-                <div class="d-block d-sm-flex justify-content-between">
-                  <span class="text-bold">{{ schedule.to }}</span>
-                  <div class="d-inline-block ml-sm-1 ml-md-auto">
-                    <span class="mr-sm-3 mr-md-5">Arr.</span>
-                    <span class="text-bold">19.40</span>
-                  </div>
-                </div>
-              </div>
-              <div class="ml-lg-3">
-                <input type="radio" class="d-none" name="selectedTicket" id="selectedTicket-2" value="2">
-                <label for="selectedTicket-2" class="selectTicket">
-                  <img src="{% static "image/circle.png" %}" alt="Uncheck">
-                </label>
-              </div>
-            </div>
-
-            <div class="d-flex justify-content-center align-items-center rounded border w-100 p-3 my-3">
-              <div class="border-right text-center" style="min-width: 90px;">
-                <figure class="w-25 mx-auto">
-                  <img src="{% static 'image/train.png' %}" class="mx-auto img-fluid" alt="Train">
-                </figure>
-                <h6>Train No.</h6>
-                <h5 class="mb-0">200</h5>
-              </div>
-              <div class="d-none d-md-inline-block vertical-line mx-3 mx-md-4 mx-lg-5">
-                <div class="circle d-block"></div>
-                <div class="circle d-block"></div>
-              </div>
-              <div class="d-inline-block w-100 mr-auto px-2">
-                <div class="d-block d-sm-flex justify-content-between">
-                  <span class="text-bold">{{ schedule.from }}</span>
-                  <div class="d-inline-block ml-sm-1 ml-md-auto">
-                    <span class="mr-sm-3 mr-md-5">Dep.</span>
-                    <span class="text-bold">09.12</span>
-                  </div>
-                </div>
-                <hr>
-                <div class="d-block d-sm-flex justify-content-between">
-                  <span class="text-bold">{{ schedule.to }}</span>
-                  <div class="d-inline-block ml-sm-1 ml-md-auto">
-                    <span class="mr-sm-3 mr-md-5">Arr.</span>
-                    <span class="text-bold">19.40</span>
-                  </div>
-                </div>
-              </div>
-              <div class="ml-lg-3">
-                <input type="radio" class="d-none" name="selectedTicket" id="selectedTicket-3" value="3">
-                <label for="selectedTicket-3" class="selectTicket">
-                  <img src="{% static "image/circle.png" %}" alt="Uncheck">
-                </label>
-              </div>
-            </div>
-          </div>
-        </form>
       </div>
     </div>
   </div>
@@ -235,99 +168,3 @@
   }
 </style>
 {% endblock style %}
-
-{% block script %}
-<script>
-$(function () {
-    csrf_token =  $("[name='csrfmiddlewaretoken']").val()
-
-    $("#selected-schedule").hide()
-    $("#display-schedule").hide()
-    // Fetch schedules by input
-    $('#search-schedule').on('click', function (event) {
-      event.preventDefault()
-      from_id = $('#from-select').val()
-      to_id = $('#to-select').val()
-      from_name = $(`#from-select option[value='${from_id}']`).attr('data-name')
-      to_name = $(`#to-select option[value='${to_id}']`).attr('data-name')
-
-      console.log(from_id, from_name, to_id, to_name)
-
-      if (from_id && to_id) {
-        if (from_id != to_id) {
-          $(`#from-name`).text(from_name)
-          $(`#to-name`).text(to_name)
-
-          axios({
-            url: `/api/getSchedules?from=${from_id}&to=${to_id}`,
-            method: "GET",
-            headers: {
-              'X-CSRFToken': csrf_token,
-              'Accept': 'application/json',
-              'Content-Type': 'application/json'
-            }
-          }).then((res) => {
-            data = res.data
-            
-            $('#display-schedule').empty()
-            data.forEach((schedule) => {
-              console.log(schedule)
-              train_pk = Object.keys(schedule)[0]
-              from_data = JSON.parse(schedule[train_pk]['timetable']['from'])[0]
-              to_data = JSON.parse(schedule[train_pk]['timetable']['to'])[0]
-              console.log(from_data)
-              console.log(to_data)
-              $('#display-schedule').append(`
-                <div class="d-flex justify-content-center align-items-center rounded border w-100 p-3 my-3">
-                  <div class="border-right text-center" style="min-width: 90px;">
-                    <figure class="w-25 mx-auto">
-                      <img src="{% static 'image/train.png' %}" class="mx-auto img-fluid" alt="Train">
-                    </figure>
-                    <h6>Train No.</h6>
-                    <h5 class="mb-0">200</h5>
-                  </div>
-                  <div class="d-none d-md-inline-block vertical-line mx-3 mx-md-4 mx-lg-5">
-                    <div class="circle d-block"></div>
-                    <div class="circle d-block"></div>
-                  </div>
-                  <div class="d-inline-block w-100 mr-auto px-2">
-                    <div class="d-block d-sm-flex justify-content-between">
-                      <span class="text-bold">${from_name}</span>
-                      <div class="d-inline-block ml-sm-1 ml-md-auto">
-                        <span class="mr-sm-3 mr-md-5">Dep.</span>
-                        <span class="text-bold">${from_data['fields']['departed_time']}</span>
-                      </div>
-                    </div>
-                    <hr>
-                    <div class="d-block d-sm-flex justify-content-between">
-                      <span class="text-bold">${to_name}</span>
-                      <div class="d-inline-block ml-sm-1 ml-md-auto">
-                        <span class="mr-sm-3 mr-md-5">Arr.</span>
-                        <span class="text-bold">${to_data['fields']['arrived_time']}</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="ml-lg-3">
-                    <input type="radio" class="d-none" name="selectedTicket" id="selectedTicket-${train_pk + "-" + from_data.pk + "-" + to_data.pk}" value="${train_pk + "-" + from_data.pk + "-" + to_data.pk}">
-                    <label for="selectedTicket-${train_pk + "-" + from_data.pk + "-" + to_data.pk}" class="selectTicket">
-                      <img src="{% static "image/circle.png" %}" alt="Uncheck">
-                    </label>
-                  </div>
-                </div>
-              `)
-            });
-            
-            $("#selected-schedule").slideDown(300, function() {
-              $("#display-schedule").show(200);
-            });
-          }).catch((err) => {
-            console.log('error')
-          })
-        } else {
-          $('#select-error').text('Please select different stations.')
-        }
-      }
-    })
-});
-</script>
-{% endblock script %}
