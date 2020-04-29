@@ -1,7 +1,7 @@
 from datetime import datetime
 
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
@@ -26,26 +26,32 @@ def dashboard(request):
     return render(request, 'dashboard.html', context=context)
 
 
-class ViewAnnouncement(LoginRequiredMixin, View):
+class ViewAnnouncement(LoginRequiredMixin, PermissionRequiredMixin, View):
+    permission_required = 'announcement.view_announcement'
+
     def get(self, request):
         context = prepare_context(request, show_navbar=True)
         user = request.user
         context['user'] = user
         account = Account.objects.get(user_id_id=user.id)
+
+        # announcer = Announcer.objects.get(user_id=account.id)
+        context['announcement'] = Announcement.objects.all()
+        context['is_announcer'] = account.user_type == 'AN'
+
+        return render(request, 'announcement/viewAnnouncement.html', context=context)
+
+
+class CreateAnnouncement(LoginRequiredMixin, PermissionRequiredMixin, View):
+    permission_required = 'announcement.add_announcement'
+
+    def get(self, request):
+        context = prepare_context(request, show_navbar=True)
+        user = request.user
         # announcer = Announcer.objects.get(user_id=account.id)
         context['announcement'] = Announcement.objects.filter(
             announcer_user_id=account.id)
 
-        return render(request, 'announcement/viewAnnouncement.html', context=context)
-
-    def post(self, request):
-        return HttpResponse(200)
-
-
-class CreateAnnouncement(LoginRequiredMixin, View):
-    def get(self, request):
-        context = prepare_context(request, show_navbar=True)
-        user = request.user
         context['user'] = user
         announcement_form = AnnouncementForm()
         context['announcement_form'] = announcement_form
@@ -80,12 +86,16 @@ class CreateAnnouncement(LoginRequiredMixin, View):
         return render(request, 'announcement/createAnnouncement.html', context=context)
 
 
-class EditAnnouncement(LoginRequiredMixin, View):
+class EditAnnouncement(LoginRequiredMixin, PermissionRequiredMixin, View):
+    permission_required = 'announcement.change_announcement'
+
     def get(self, request, announcement_id):
         context = prepare_context(request, show_navbar=True)
+        # announcer = Announcer.objects.get(user_id=account.id)
         announcement_form = AnnouncementForm()
         context['announcement_form'] = announcement_form
-        context['announcement'] = Announcement.objects.get(pk=announcement_id)
+        context['announcement'] = Announcement.objects.get(
+            pk=announcement_id)
         return render(request, 'announcement/editAnnouncement.html', context=context)
 
     def post(self, request, announcement_id):
@@ -107,6 +117,7 @@ class EditAnnouncement(LoginRequiredMixin, View):
 
 
 @login_required()
+@permission_required('announcement.delete_announcement')
 def DeleteAnnouncement(request, announcement_id):
     announcement = Announcement.objects.get(pk=announcement_id)
     announcement.delete()

@@ -2,169 +2,69 @@
 {% load static %}
 
 {% block content %}
-<div class="my-4">
-  <div class="w-100 rounded border shadow p-3 p-lg-4">
-    <div class="row">
-      <div class="col">
-        <h1>View Booking History</h1>
-        <div id="selected-schedule"  class="my-3">
-          <div id="display-schedule">
-            {% if ticket %}
-              {% for date, items in ticket.items %}
-                <div class="d-block">
-                  <h3>{{ date }}</h3>
-                  {% for t in items  %}
-                    <div class="d-flex justify-content-center align-items-center rounded border w-100 p-3 my-3">
-                      <div class="border-right text-center" style="min-width: 90px;">
-                        <figure class="w-25 mx-auto">
-                          <img src="{% static 'image/train.png' %}" class="mx-auto img-fluid" alt="Train">
-                        </figure>
-                        <h6>Train No.</h6>
-                        <h5 class="mb-0">{{ t.boardingTrain.train_name }}</h5>
-                      </div>
-                      <div class="d-none d-md-inline-block vertical-line mx-3 mx-md-4 mx-lg-5">
-                        <div class="circle d-block"></div>
-                        <div class="circle d-block"></div>
-                      </div>
-                      <div class="d-inline-block w-100 mr-auto px-2" style="border-right: 1px dashed #707070;">
-                        <div class="row">
-                          <div class="col-12">
-                            <div class="d-block d-sm-flex justify-content-between">
-                              <span class="text-bold">{{ t.fromStation.station.english_station_name }}</span>
-                              <div class="d-inline-block ml-sm-1 ml-md-auto">
-                                <span class="mr-sm-3 mr-md-5">Dep.</span>
-                                <span class="text-bold d-inline-block text-right" style="width: 90px">{{ t.fromStation.departed_time }}</span>
-                              </div>
-                            </div>
-                            <hr>
-                            <div class="d-block d-sm-flex justify-content-between">
-                              <span class="text-bold">{{ t.toStation.station.english_station_name }}</span>
-                              <div class="d-inline-block ml-sm-1 ml-md-auto">
-                                <span class="mr-sm-3 mr-md-5">Arr.</span>
-                                <span class="text-bold d-inline-block text-right" style="width: 90px">{{ t.toStation.arrived_time }}</span>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  {% endfor %}
-                </div>
+  <div class="my-4">
+    <div class="w-100 rounded border shadow p-3 p-lg-5">
+      <div class="row">
+        <div class="col">
+          <div class="d-flex"></div>
+          <h1>Booking History</h1>
+          {% if ticket %}
+            <table class="table table-responsive-sm table-responsive-md mt-3">
+              <thead>
+                <tr>
+                  <th scope="col">Train No.</th>
+                  {% if is_TS %}
+                    <th scope="col">Buyer</th>
+                  {% endif %}
+                  <th scope="col">From</th>
+                  <th scope="col">To</th>
+                  <th scope="col">Departed Time</th>
+                  <th scope="col">Arrived Time</th>
+                  <th scope="col">Bought Date</th>
+                  {% if is_TS %}
+                    <th scope="col">Action</th>
+                  {% endif %}
+                </tr>
+              </thead>
+              <tbody>
+              {% for t in ticket %}
+                <tr>
+                  <th scope="row">{{ t.boardingTrain.train_name }}</th>
+                  {% if is_TS %}
+                    <td>{{ t.buyer.user_id.username }}</td>
+                  {% endif %}
+                  <td>{{ t.fromStation.station.english_station_name }}</td>
+                  <td>{{ t.toStation.station.english_station_name }}</td>
+                  <td>{{ t.fromStation.departed_time|time:'H:i' }}</td>
+                  <td>{{ t.toStation.arrived_time|time:'H:i' }}</td>
+                  <td>{{ t.buyDate|date:'d/M/yy' }}</td>
+                  {% if is_TS %}
+                    <td>
+                      {% csrf_token %}
+                      <a href="{% url 'cancelBookingTicket' ticket_id=t.id %}">
+                        <div class="btn btn-danger">Cancel</div>
+                      </a>
+                    </td>
+                  {% endif %}
+                </tr>
               {% endfor %}
-            {% else %}
-              <div class="text-center">
-                <h1>You don't have any booking ticket yet!</h1>
-                <a href={% url 'searchSchedules' %} class="my-3">
-                  <h3 class="text-underline">Booking new one!</h3>
-                </a>
-              </div>
-            {% endif %}
+            </tbody>
+          </table>
+        {% else %}
+          <div class="text-center my-5">
+            <h2>You don't have any booking ticket yet!</h2>
+            <a href={% url 'searchSchedules' %} class="my-3">
+              <h3 class="text-underline">Booking new one!</h3>
+            </a>
           </div>
-        </div>
+        {% endif %}
       </div>
     </div>
   </div>
-</div>
+  </div>
 {% endblock content %}
 
 {% block style %}
-<style>
-  #progress-bar {
-    width: 100%;
-    height: 20%;
-  }
-
-  #line {
-    height: 6px;
-    width: 70%;
-    background: #707070;
-    border-radius: 5px;
-    margin: auto;
-    top: 50%;
-    transform: translateY(-50%);
-    position: relative;
-  }
-
-  #progress-bar > #line .circle {
-    width: 20px;
-    height: 20px;
-    background: white;
-    border-radius: 15px;
-    position: absolute;
-    top: -7px;
-    border: 3px solid #707070;
-  }
-
-  #progress-bar > #line .circle.active {
-    background: #707070;
-  }
-
-  #progress-bar > #line .circle:before {
-    content: '';
-    width: 10px;
-    height: 10px;
-    background: white;
-    position: absolute;
-    border-radius: 100%;
-    top: 2px;
-    left: 2px;
-    display: none;
-  }
-
-  .vertical-line {
-    width: 3px;
-    height: 60px;
-    background: #707070; 
-  }
-
-  .vertical-line .circle {
-    position: absolute;
-    margin-top: -10px;
-    margin-left: -9px;
-    z-index: 1;
-    height: 20px;
-    width: 20px;
-    border-radius: 25px;
-    border: 1px solid #707070;
-  }
-
-  .vertical-line .circle:nth-child(1) {
-    margin-top: -10px;
-    background: #fff;
-  }
-
-  .vertical-line .circle:nth-child(2) {
-    margin-top: 50px;
-    background: #707070;
-  }
-
-  .selectTicket > img {
-    background-image: url({% static "image/circle.png"%});
-    background-repeat: no-repeat;
-    width: auto; /*or your image's width*/
-    height: auto; /*or your image's height*/
-    margin: 0;
-    padding: 0;
-
-    -webkit-user-drag: none; 
-    user-drag: none; 
-    user-select: none;
-    cursor: pointer;
-  }
-
-  input[type='radio']:checked ~ label.selectTicket {
-    background: url({% static "image/right.png"%}), lightgreen;
-    -webkit-mask-image: url({% static "image/right.png"%});
-    -webkit-mask-mode: alpha;
-    -webkit-mask-size: cover;
-    mask-image: url({% static "image/right.png"%});
-    mask-mode: alpha;
-    mask-size: cover;
-    background-blend-mode: multiply;
-  }
-
-  input[type='radio']:checked ~ label.selectTicket > img {
-    opacity: 0;
-  }
-</style>
+  <style>
+  </style>
 {% endblock style %}

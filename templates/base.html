@@ -80,9 +80,9 @@
         <div class="row align-content-right">
           <div class="col text-uppercase">
             <a class="nav-link d-inline-block" href={% url 'searchSchedules' %}>BOOK A TICKET</a>
-            <a class="nav-link d-inline-block">TRANSACTION STATUS</a>
             <a class="nav-link d-inline-block" href={% url 'searchTimetable' %}>TRAIN SCHEDULE</a>
-            <a class="nav-link d-inline-block">VIEW BOOKING TICKET</a>
+            <a class="nav-link d-inline-block" href={% url 'viewTransaction' %}>TRANSACTION STATUS</a>
+            <a class="nav-link d-inline-block" href={% url 'bookingHistory' %}>VIEW BOOKING HISTORY</a>
           </div>
         </div>
       </div>
@@ -93,9 +93,9 @@
         <div class="d-none d-block d-lg-none d-xl-none">
           <div class="text-uppercase">
             <a class="nav-link d-inline-block" href={% url 'searchSchedules' %}>BOOK A TICKET</a>
-            <a class="nav-link">TRANSACTION STATUS</a>
             <a class="nav-link" href={% url 'searchTimetable' %}>TRAIN SCHEDULE</a>
-            <a class="nav-link">VIEW BOOKING TICKET</a>
+            <a class="nav-link" href={% url 'viewTransaction' %}>TRANSACTION STATUS</a>
+            <a class="nav-link" href={% url 'bookingHistory' %}>VIEW BOOKING HISTORY</a>
           </div>
           <hr class="w-75">
           <div class="d-flex">

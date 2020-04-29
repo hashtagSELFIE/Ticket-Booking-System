@@ -6,5 +6,6 @@ urlpatterns = [
     path('history/', views.BookingHistory.as_view(), name="bookingHistory"),
     path('payments/', views.SelectTransaction.as_view(), name="selectTransaction"),
     path('payments/success/<int:ticket_id>',
-         views.successful_booking, name="selectTransaction")
+         views.successful_booking, name="selectTransaction"),
+    path('cancel/<int:ticket_id>', views.cancel_booking, name="cancelBookingTicket")
 ]

@@ -8,4 +8,3 @@ class Announcement(models.Model):
         Announcer, on_delete=models.CASCADE, null=True)
     announce_text = models.TextField()
     announce_time = models.DateTimeField()
-    view_count = models.IntegerField()

@@ -3,7 +3,7 @@
 
 {% block content %}
 <div class="my-4">
-  <div class="w-100 p-1 p-lg-4 py-sm-3">
+  <div class="w-100 p-1 p-lg-5 py-sm-3">
     <div id="progress-bar" class="my-5">
       <div id="line">
         <div class="circle active" style="left: 0%;"></div>
@@ -35,7 +35,7 @@
               <span class="text-bold">{{ ticket.fromStation.station.english_station_name }}</span>
               <div class="d-inline-block ml-sm-1 ml-md-auto">
                 <span class="mr-sm-3 mr-md-5">Dep.</span>
-                <span class="text-bold">{{ ticket.fromStation.departed_time }}</span>
+                <span class="text-bold">{{ ticket.fromStation.departed_time|time:'H:i' }}</span>
               </div>
             </div>
             <hr>
@@ -43,7 +43,7 @@
               <span class="text-bold">{{ ticket.toStation.station.english_station_name }}</span>
               <div class="d-inline-block ml-sm-1 ml-md-auto">
                 <span class="mr-sm-3 mr-md-5">Arr.</span>
-                <span class="text-bold">{{ ticket.toStation.arrived_time }}</span>
+                <span class="text-bold">{{ ticket.toStation.arrived_time|time:'H:i' }}</span>
               </div>
             </div>
           </div>

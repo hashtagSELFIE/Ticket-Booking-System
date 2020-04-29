@@ -1,7 +1,8 @@
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
 from django.views import View
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.models import User
 from account.utils import prepare_context
 from schedule.models import Station, Timetable, Train
@@ -61,35 +62,27 @@ class SelectTransaction(LoginRequiredMixin, View):
             return render(request, 'booking/selectTransaction.html', context=context)
 
 
-class BookingHistory(LoginRequiredMixin, View):
+class BookingHistory(LoginRequiredMixin, PermissionRequiredMixin, View):
+    permission_required = 'booking.view_ticket'
+
     def get(self, request):
         context = prepare_context(request, show_navbar=True)
         user = User.objects.get(username=request.user.username)
         account = Account.objects.get(user_id=user)
-        tickets = Ticket.objects.filter(buyer=account).order_by("-buyDate"),
-        if tickets:
-            ticket = {}
-            for t in tickets[0]:
-                if t.buyDate in ticket.keys():
-                    ticket[t.buyDate].append(t)
-                else:
-                    ticket[t.buyDate] = [t]
-            print(ticket)
-            context['ticket'] = ticket
-            print(context['ticket'])
-        return render(request, 'booking/historyBooking.html', context=context)
+        print(account.user_type)
+        is_TS = account.user_type == 'TS'
+        context['is_TS'] = is_TS
 
-    def post(self, request):
-        context = prepare_context(request, show_navbar=True)
-        user = User.objects.get(username=request.user.username)
-        account = Account.objects.get(user_id=user)
-        tickets = Ticket.objects.filter(buyer=account).order_by("-buyDate"),
-        if tickets:
-            context['ticket'] = list(map(lambda t: t, tickets[0]))
-            print(context['ticket'])
+        if is_TS:
+            tickets = Ticket.objects.all().order_by("-buyDate")
+            context['ticket'] = tickets
+        else:
+            tickets = Ticket.objects.filter(buyer=account).order_by("-buyDate")
+            context['ticket'] = tickets
         return render(request, 'booking/historyBooking.html', context=context)
 
 
+@login_required
 def successful_booking(request, ticket_id):
     context = prepare_context(request, show_navbar=True)
     ticket = Ticket.objects.get(id=ticket_id)
@@ -101,3 +94,12 @@ def successful_booking(request, ticket_id):
     else:
         context['ticket'] = ticket
         return render(request, 'booking/successfulBooking.html', context=context)
+
+
+@login_required
+@permission_required('booking.delete_ticket')
+def cancel_booking(request, ticket_id):
+    ticket = Ticket.objects.get(pk=ticket_id)
+    ticket.delete()
+
+    return redirect('/booking/history')

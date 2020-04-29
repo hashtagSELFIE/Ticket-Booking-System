@@ -3,7 +3,7 @@
 
 {% block content %}
   <div class="my-4">
-    <div class="w-100 rounded border shadow p-5">
+    <div class="w-100 rounded border shadow p-3 p-lg-5">
       <div class="row">
         <a class="col">
           <h1>Create Announcement </h1>
@@ -11,9 +11,10 @@
             <form action="#" method="POST">
               {% csrf_token %}
               <div class="form-group">
-                <input type="text" class="form-control" name="{{ announcement_form.announce_text.name }}"
-                       id="{{ announcement_form.announce_text.id_for_label }}" placeholder="Enter Announcement here."
-                       value="" required>
+                <textarea class="form-control" name="{{ announcement_form.announce_text.name }}"
+                  id="{{ announcement_form.announce_text.id_for_label }}"
+                  required rows="3">
+                </textarea>
               </div>
 
               {% if error.errorMsg %}
