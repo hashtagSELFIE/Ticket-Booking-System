@@ -23,24 +23,23 @@
             {% for t in ticket %}
               <p>
                 <tr>
-                  <th scope="row">{{ t.id }}</th>
-                  <td>{{ t.fromStation_id }}</td>
-                  <td>{{ t.toStation_id }}</td>
+
+                  <th scope="row">{% for tr in train %}{% if tr.id == t.boardingTrain_id %}{{ tr.train_name }}{% endif %}{% endfor %}</th>
+                  <td>{{ t.fromStation.station.english_station_name }}</td>
+                  <td>{{ t.toStation.station.english_station_name }}</td>
                   <td>{{ t.transactionStatus }}</td>
                   <td>{{ t.bookingStatus }}</td>
                   <td>{{ t.buyDate|date:'d/M/yy' }}</td>
                   <td>
-                    {% comment %}
                     {% if is_TS %}
                       {% csrf_token %}
-                      <a href="{% url 'editTransaction' transaction_id=t.id %}">
+                      <a href="{% url 'editTransaction' ticket_id=t.id %}">
                         <div class="btn btn-warning">Edit</div>
                       </a>
-                      <a href="{% url 'deleteTransaction' transaction_id=t.id %}">
+                      <a href="{% url 'deleteTransaction' ticket_id=t.id %}">
                         <div class="btn btn-danger">Delete</div>
                       </a>
                     {% endif %}
-                    {% endcomment %}
                   </td>
                 </tr>
               </a>

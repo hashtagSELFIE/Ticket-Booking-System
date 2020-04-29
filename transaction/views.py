@@ -34,33 +34,37 @@ class ViewTransaction(LoginRequiredMixin, View):
 
 
 class EditTransaction(LoginRequiredMixin, View):
-    def get(self, request, announcement_id):
+    def get(self, request, ticket_id):
         context = prepare_context(request, show_navbar=True)
-        # context['announcement'] = Announcement.objects.get(pk=announcement_id)
-        # return render(request, 'transaction/editTransaction.html', context=context)
-        return HttpResponse(200)
+        context['ticket'] = Ticket.objects.get(pk=ticket_id)
+        return render(request, 'transaction/editTransaction.html', context=context)
 
-    def post(self, request, announcement_id):
+    def post(self, request, ticket_id):
         context = prepare_context(request, show_navbar=True)
-        # announcement = Announcement.objects.get(pk=announcement_id)
-        text = request.POST.get('announce_text')
-        count = request.POST.get('view_count')
-        #
-        # if text != announcement.announce_text:
-        #     announcement.announce_text = text
-        #
-        # if count != announcement.view_count:
-        #     announcement.view_count = count
-        #
-        # announcement.announce_time = datetime.now()
-        # announcement.save()
+        ticket = Ticket.objects.get(pk=ticket_id)
+        transaction_information = request.POST.get('transaction_information')
+        transaction_status = request.POST.get('transaction_status')
+        booking_status = request.POST.get('booking_status')
 
-        return redirect('/transaction/')
+        ticket.transactionInformation = transaction_information
+        ticket.transactionStatus = HTMLCheckboxToBoolean(transaction_status)
+        ticket.bookingStatus = HTMLCheckboxToBoolean(booking_status)
+
+        ticket.save()
+
+        return redirect('/transaction')
 
 
 @login_required()
-def DeleteTransaction(request, announcement_id):
-    # announcement = Announcement.objects.get(pk=announcement_id)
-    # announcement.delete()
+def DeleteTransaction(request, ticket_id):
+    ticket = Ticket.objects.get(pk=ticket_id)
+    ticket.delete()
 
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+def HTMLCheckboxToBoolean(a):
+    if a is None:
+        return False
+    else:
+        return True
