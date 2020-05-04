@@ -5,8 +5,7 @@ from django.db import models
 
 
 class Station(models.Model):
-    station_name = models.TextField()
-    english_station_name = models.TextField(null=True)
+    station_name = models.TextField(null=True)
 
 
 class Train(models.Model):
